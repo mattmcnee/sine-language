@@ -4,6 +4,7 @@ import { set, ref, get } from 'firebase/database';
 
 const Quiz = ({ database }) => {
   const [quizData, setQuizData] = useState([]);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
 
   useEffect(() => {
     const worksheetRef = ref(database, `/sheets/`);
@@ -25,15 +26,27 @@ const Quiz = ({ database }) => {
       });
   }, [database]);
 
+  const handleNextQuiz = () => {
+    setCurrentQuizIndex((prevIndex) => prevIndex + 1);
+  };
+
   return (
     <div>
       <h1>Maths Quiz</h1>
-      {quizData.map((item, index) => (
-        <QuizBox key={index} expression={item.expression} validAns={item.validAns} />
-      ))}
+      {quizData.length > 0 && currentQuizIndex < quizData.length && (
+        <QuizBox 
+          key={currentQuizIndex} 
+          expression={quizData[currentQuizIndex].expression} 
+          validAns={quizData[currentQuizIndex].validAns} 
+        />
+      )}
+      {currentQuizIndex < quizData.length - 1 && (
+        <button onClick={handleNextQuiz}>Next</button>
+      )}
     </div>
   );
 };
 
 export default Quiz;
+
 
