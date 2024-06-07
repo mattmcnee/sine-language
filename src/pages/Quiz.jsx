@@ -5,6 +5,16 @@ import { set, ref, get } from 'firebase/database';
 const Quiz = ({ database }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [score, setScore] = useState(0);
+
+  const motivs = [
+    "well done!",
+    "nice work!",
+    "correct!",
+    "good work!",
+    "perfect!",
+    "nice job!"
+    ]
 
   useEffect(() => {
     const worksheetRef = ref(database, `/sheets/`);
@@ -26,19 +36,23 @@ const Quiz = ({ database }) => {
       });
   }, [database]);
 
-  const handleNextQuiz = () => {
+  const handleNextQuiz = (isCorrect) => {
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
+    if (isCorrect){
+      setScore((preScore => preScore + 1));
+    }
   };
 
   return (
     <div>
-      <h1>Maths Quiz</h1>
+      <h1>Score: {score}</h1>
       {quizData.length > 0 && currentQuizIndex < quizData.length && (
         <QuizBox 
           key={currentQuizIndex} 
           expression={quizData[currentQuizIndex].expression} 
           validAns={quizData[currentQuizIndex].validAns}
           nextQuiz={handleNextQuiz} 
+          motivs={motivs}
         />
       )}
     </div>

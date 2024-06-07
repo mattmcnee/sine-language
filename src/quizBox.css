@@ -6,6 +6,7 @@
 	height: 400px;
 	display: flex;
 	flex-direction: column;
+	font-family: sans-serif;
 }
 
 .maths-box{
@@ -35,6 +36,7 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: right;
+		margin-top: 20px;
 }
 
 .user-input .bottom-box button{
@@ -44,7 +46,6 @@
 	padding: 8px 10px;
 	border: 2px solid #ccc;
 	border-radius: 10px;
-	margin-top: 20px;
 }
 
 .user-input .bottom-box button.correct{
@@ -53,4 +54,10 @@
 
 .user-input .bottom-box button.incorrect{
 	border-color: red;
+}
+
+.user-input .bottom-box .correct-answer{
+	flex: 1;
+	text-align: center;
+	padding: 8px 4px;
 }
