@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import Latex from 'react-latex';
+import { BlockMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
+import './quizBox.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const QuizBox = ({ expression, validAns }) => {
   const [userAnswer, setUserAnswer] = useState('');
@@ -8,7 +11,8 @@ const QuizBox = ({ expression, validAns }) => {
     setUserAnswer(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
     if (validAns.includes(userAnswer)) {
       alert('Correct!');
     } else {
@@ -17,22 +21,22 @@ const QuizBox = ({ expression, validAns }) => {
   };
 
   return (
-    <div>
-      <h1>Quiz</h1>
-      <div>
-        <Latex>{expression}</Latex>
+    <div className="quiz-box">
+      <div className="maths-box">
+        <BlockMath>{expression}</BlockMath>
       </div>
-      <div>
+      <form className="user-input" onSubmit={handleSubmit}>
         <input 
           type="text" 
           value={userAnswer} 
           onChange={handleInputChange} 
           placeholder="Enter your answer" 
         />
-        <button onClick={handleSubmit}>Submit</button>
-      </div>
+        <button type="submit"><i className="fas fa-paper-plane"></i></button>
+      </form>
     </div>
   );
 };
 
 export default QuizBox;
+
