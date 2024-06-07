@@ -37,11 +37,9 @@ const Quiz = ({ database }) => {
         <QuizBox 
           key={currentQuizIndex} 
           expression={quizData[currentQuizIndex].expression} 
-          validAns={quizData[currentQuizIndex].validAns} 
+          validAns={quizData[currentQuizIndex].validAns}
+          nextQuiz={handleNextQuiz} 
         />
-      )}
-      {currentQuizIndex < quizData.length - 1 && (
-        <button onClick={handleNextQuiz}>Next</button>
       )}
     </div>
   );

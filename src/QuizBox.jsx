@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import './quizBox.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const QuizBox = ({ expression, validAns }) => {
+const QuizBox = ({ expression, validAns, nextQuiz }) => {
   const [userAnswer, setUserAnswer] = useState('');
+  const [ansState, setAnsState] = useState("check");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   const handleInputChange = (e) => {
     setUserAnswer(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
     if (validAns.includes(userAnswer)) {
-      alert('Correct!');
+      setAnsState("correct")
     } else {
-      alert('Incorrect, try again.');
+      setAnsState("incorrect")
     }
   };
 
@@ -31,8 +37,19 @@ const QuizBox = ({ expression, validAns }) => {
           value={userAnswer} 
           onChange={handleInputChange} 
           placeholder="Enter your answer" 
+          ref={inputRef}
         />
-        <button type="submit"><i className="fas fa-paper-plane"></i></button>
+        <div className="bottom-box">
+          {ansState=="check" &&
+            <button type="submit">Check</button>
+          }
+          {ansState=="correct" &&
+            <button onClick={nextQuiz} className="correct">Continue</button>
+          }
+          {ansState=="incorrect" &&
+            <button onClick={nextQuiz} className="incorrect">Continue</button>
+          }
+        </div>
       </form>
     </div>
   );
