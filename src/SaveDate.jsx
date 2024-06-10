@@ -53,7 +53,9 @@ const SaveDate = ({ date }) => {
     setFormDate(`${dateString} at ${timeString}`);
 	}, [date]);
 
-	return formDate;
+	return (
+    <span className="save-date">{formDate}</span>
+  );
 }
 
 export default SaveDate

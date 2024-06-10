@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Create from './Create';
 import CreateSet from './CreateSet';
+import EditEquations from './EditEquations';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -37,6 +38,7 @@ function App() {
           <Route exact path="/quiz" element={<Quiz database={database}/>}/>
           <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
           <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>
+          <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>
         </Routes>
       </Router>

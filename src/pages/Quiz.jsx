@@ -29,13 +29,13 @@ const Quiz = ({ database }) => {
     };
 
     const fetchWorksheetData = async () => {
-      const worksheetRef = ref(database, `/sets/test/`);
+      const worksheetRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
       try {
         const snapshot = await get(worksheetRef);
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
           const decodedData = await Promise.all(
-            Object.entries(firebaseData).map(async ([key, value]) => ({
+            Object.entries(firebaseData.equations).map(async ([key, value]) => ({
               expression: decodeURIComponent(value),
               validAns: await getEqData(value),
             }))

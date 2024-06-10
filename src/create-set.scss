@@ -22,17 +22,25 @@ body {
   .save-changes{
     border: none;
     background: none;
-    color: black;
     font-size: 32px;
     cursor: pointer;
     padding: 20px 20px;
+    color: #444;
   }
 
+  .save-date{
+    color: #444;
+  }
 
   .set-title{
     padding: 20px 20px;
     margin: 0;
     flex: 1;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    font-size: 26px;
+    color: #444;
   }
 
   .equation-container{
@@ -95,6 +103,14 @@ body {
     cursor: grab;
     margin: 0;
     padding: 20px;
+  }
+
+  .edit-equation{
+    cursor: pointer;
+    padding: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
   }
 
   .add-equation{

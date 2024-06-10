@@ -12,6 +12,7 @@ const CreateSet = ({ database, openai }) => {
   const [equations, setEquations] = useState([]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saveTime, setSaveTime] = useState("unsaved");
+  const [title, setTitle] = useState("");
   const navigate = useNavigate();
   let { id } = useParams();
 
@@ -29,6 +30,7 @@ const CreateSet = ({ database, openai }) => {
               latex: decodeURIComponent(equation)
             }));
             setEquations(transformedEquations);
+            setTitle(firebaseData.title)
             console.log(transformedEquations);
           } else {
             console.error('Error getting data:', error);
@@ -95,12 +97,9 @@ const CreateSet = ({ database, openai }) => {
   const saveChanges = () => {
     const now = new Date();
     const latexEquations = equations.map(eq => encodeURIComponent(eq.latex));
-    const sheetData = {title: "New", equations: latexEquations}
+    const sheetData = {title: title, equations: latexEquations}
 
-
-
-    if (id == "new" || id == null) {
-      // For creating a new sheet
+    if (id == "new" || id == null) { // for creating a new sheet
       const newSheetRef = push(ref(database, 'sets/'));
       set(newSheetRef, sheetData).then(() => {
         id = newSheetRef.key;
@@ -108,8 +107,7 @@ const CreateSet = ({ database, openai }) => {
       }).catch(error => {
         console.error("Error writing new sheet data to Firebase:", error);
       });
-    } else {
-      // For updating a sheet, a reference to the existing sheet
+    } else { // for updating a sheet, a reference to the existing sheet
       const existingSheetRef = ref(database, `sets/${id}`);
       set(existingSheetRef, sheetData).then(() => {
         setSaveTime(now);
@@ -134,14 +132,21 @@ const CreateSet = ({ database, openai }) => {
     }
   };
 
-
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
 
   return (
     <>
     <Nav/>
     <div className="create-set-list">
       <div className="top-nav">
-        <h1 className="set-title">Set Title</h1>
+        <input
+          className="set-title"
+          value={title}
+          onChange={handleTitleChange}
+          placeholder="Enter set title"
+        />
         {/*<span>{saveTime}</span>*/}
         <SaveDate date={saveTime}/>
         <button onClick={() => saveChanges()} className="save-changes">
