@@ -17,24 +17,42 @@ const Quiz = ({ database }) => {
     ]
 
   useEffect(() => {
-    const worksheetRef = ref(database, `/sheets/`);
-    get(worksheetRef)
-      .then((snapshot) => {
+    const getEqData = async (value) => {
+      const dataRef = ref(database, `/equations/${value}`);
+      const snapshot = await get(dataRef);
+      if (snapshot.exists()) {
+        const eqData = snapshot.val();
+        return eqData.ans;
+      } else {
+        return [];
+      }
+    };
+
+    const fetchWorksheetData = async () => {
+      const worksheetRef = ref(database, `/sets/test/`);
+      try {
+        const snapshot = await get(worksheetRef);
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
-          const decodedData = Object.keys(firebaseData).map(key => ({
-            expression: decodeURIComponent(key),
-            validAns: firebaseData[key].ans
-          }));
+          const decodedData = await Promise.all(
+            Object.entries(firebaseData).map(async ([key, value]) => ({
+              expression: decodeURIComponent(value),
+              validAns: await getEqData(value),
+            }))
+          );
+          console.log(decodedData);
           setQuizData(decodedData);
         } else {
           console.log('No data available');
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error getting data:', error);
-      });
+      }
+    };
+
+    fetchWorksheetData();
   }, [database]);
+
 
   const handleNextQuiz = (isCorrect) => {
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);

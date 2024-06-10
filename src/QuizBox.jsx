@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
-import './quizBox.css';
+import './quizBox.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const QuizBox = ({ expression, validAns, nextQuiz, motivs }) => {
