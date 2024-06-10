@@ -1,0 +1,43 @@
+.nav-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 30px 30px 10px 30px;
+
+  .main-logo{
+    width: 40px;
+    height: 40px;
+    border-radius: 30%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo-name{
+    font-weight: bold;
+    font-size: 20px;
+    color: #444;
+    margin: 0 20px;
+  }
+
+  .logo-container{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .central-nav{
+    flex: 1;
+  }
+
+  .nav-button{
+    width: 40px;
+    height: 40px;
+    border-radius: 30%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    outline: none;
+    margin: 0 20px;
+    background-color: white;
+    cursor: pointer;
+  }
+}
+

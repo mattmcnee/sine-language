@@ -6,6 +6,7 @@ import './create-set.scss';
 import { BlockMath } from 'react-katex';
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import SaveDate from './SaveDate';
+import Nav from './Nav';
 
 const CreateSet = ({ database, openai }) => {
   const [equations, setEquations] = useState([]);
@@ -136,6 +137,8 @@ const CreateSet = ({ database, openai }) => {
 
 
   return (
+    <>
+    <Nav/>
     <div className="create-set-list">
       <div className="top-nav">
         <h1 className="set-title">Set Title</h1>
@@ -194,6 +197,7 @@ const CreateSet = ({ database, openai }) => {
         </div>
       </DragDropContext>
     </div>
+    </>
   );
 };
 
