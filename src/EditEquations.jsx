@@ -27,7 +27,7 @@ const EditEquations = ({ database, openai }) => {
               id: new Date().getTime() + index,
               ans: equation.ans,
               latex: decodeURIComponent(equation.latex),
-              expanded: false
+              expanded: true
             }));
             setEquations(transformedEquations);
             console.log(transformedEquations);
@@ -79,26 +79,22 @@ const EditEquations = ({ database, openai }) => {
     } 
   }
 
-  const checkEquation = async (exp) => {
-    if (exp == ""){
-      return false;
-    }
-    const newSheetRef = ref(database, `equations/${encodeURIComponent(exp)}`);
-    try {
-      const snapshot = await get(newSheetRef);
-      return snapshot.exists();
-    } catch (error) {
-      console.error("Error checking data existence in Firebase:", error);
-      return false;
-    }
-  };
-
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
 
   const editThisEquation = (index) => {
 
+  }
+
+  const handleAnswerChange = (id, index, event) => {
+    const updatedEquations = equations.map(equation => {
+      if (equation.id === id) {
+        return { ...equation, latex: event.target.value };
+      }
+      return equation;
+    });
+    setEquations(updatedEquations);
   }
 
   return (
@@ -122,16 +118,31 @@ const EditEquations = ({ database, openai }) => {
           {equations.map((equation, index) => (
             <div key={equation.id} className="equation-container">
               <div className="equation-content">
-                <button onClick={() => editThisEquation(index)} className="edit-equation">
-                  <i className="fas fa-edit"></i>
-                </button>
-                <input
-                  type="text"
-                  value={equation.latex}
-                  onChange={(event) => handleInputChange(equation.id, event)}
-                />
-                <BlockMath>{equation.latex}</BlockMath>
-                <span>({equation.ans.length} translations)</span>
+                <div className="equation-inline">
+                  <button onClick={() => editThisEquation(index)} className="edit-equation">
+                    <i className="fas fa-edit"></i>
+                  </button>
+                  <input
+                    type="text"
+                    value={equation.latex}
+                    onChange={(event) => handleInputChange(equation.id, event)}
+                  />
+                  <BlockMath>{equation.latex}</BlockMath>
+                  <span>({equation.ans.length} translations)</span>
+                </div>
+                {equation.expanded && (
+                <div className="equation-translations">
+                  {equation.ans.map((ans, index) => (
+                    <div key={index} className="equation-answer">
+                      <input
+                        type="text"
+                        value={ans}
+                        onChange={(event) => handleAnswerChange(equation.id, index, event)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
               </div>
             </div>
           ))}

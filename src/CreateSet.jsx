@@ -171,6 +171,7 @@ const CreateSet = ({ database, openai }) => {
                         </button>
                       </div>
                       <div className="equation-content">
+                      <div className="equation-inline">
                       <div className="drag-handle" {...provided.dragHandleProps}>
                         <i className="fas fa-bars"></i>
                       </div>
@@ -186,6 +187,7 @@ const CreateSet = ({ database, openai }) => {
                       {!equation.ans && equation.latex != "" &&
                         <i className="fas fa-times"></i>
                       }
+                      </div>
                       </div>
                     </div>
                   )}
