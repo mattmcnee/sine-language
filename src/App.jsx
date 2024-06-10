@@ -36,7 +36,7 @@ function App() {
           <Route exact path="/" element={<Home/>}/>
           <Route exact path="/quiz" element={<Quiz database={database}/>}/>
           <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
-          <Route exact path="/create-set" element={<CreateSet database={database} openai={openai}/>}/>
+          <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>
         </Routes>
       </Router>
