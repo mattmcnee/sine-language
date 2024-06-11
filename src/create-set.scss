@@ -113,6 +113,15 @@ body {
     padding: 20px;
   }
 
+  .delete-button{
+    padding: 20px;
+    cursor: pointer;
+    margin: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
   .edit-equation{
     cursor: pointer;
     padding: 20px;
@@ -144,7 +153,7 @@ body {
 
   .equation-answer{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
 
 
@@ -154,7 +163,7 @@ body {
     border-bottom: 2px solid lightgrey;
     border-radius: 0;
     outline: none;
-    margin: 10px 20px;
+    margin: 10px 0 10px 0;
   }
 
   .equation-add-box{
@@ -163,7 +172,7 @@ body {
     padding-bottom: 10px;
   }
 
-  .equation-add-button{
+  .equation-add-button, .equation-generate-button{
     width: 30px;
     height: 30px;
     background-color: lightgrey;
@@ -172,5 +181,13 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+    margin: 0 10px;
+  }
+
+  .equation-container:hover .equation-add-button,
+  .equation-container:hover .equation-generate-button{
+    opacity: 1;
   }
 }

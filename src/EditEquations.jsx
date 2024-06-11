@@ -39,27 +39,65 @@ const EditEquations = ({ database, openai }) => {
 
   const saveChanges = (sheetData) => {
     const now = new Date();
-    const latexEquations = equations.map(eq => encodeURIComponent(eq.latex));
+    
+    // Encode the latex attribute of each equation
+    const encodedEquations = sheetData.equations.reduce((acc, eq) => {
+      const encodedKey = encodeURIComponent(eq.latex);
+      acc[encodedKey] = eq;
+      return acc;
+    }, {});
 
-    // if (id === "new" || id == null) {
-    //   const newSheetRef = push(ref(database, 'sets/'));
-    //   set(newSheetRef, sheetData).then(() => {
-    //     navigate(`/create-set/${newSheetRef.key}`);
-    //   }).catch(error => {
-    //     console.error("Error writing new sheet data to Firebase:", error);
-    //   });
-    // } else {
-    //   const existingSheetRef = ref(database, `sets/${id}`);
-    //   set(existingSheetRef, sheetData).then(() => {
-    //     setSaveTime(now);
-    //   }).catch(error => {
-    //     console.error(`Error updating sheet ${id} in Firebase:`, error);
-    //   });
-    // }
+    // Reference to the equations node in the database
+    const existingSheetRef = ref(database, `/equations`);
+    
+    // Set the encoded equations in the database
+    set(existingSheetRef, encodedEquations).then(() => {
+      setSaveTime(now);
+    }).catch(error => {
+      console.error(`Error updating sheet in Firebase:`, error);
+    });
 
     console.log(sheetData);
     setSaveTime(now);
   };
+
+  const removePrefix = (arr) => {
+    return arr.map(str => {
+      str = str.toLowerCase();
+      if (str.startsWith("the ")) {
+        str = str.slice(4);
+      }
+      return str;
+    });
+  }
+
+  const generateDummy = async (input) => {
+    const instructions = `Given a LaTeX expression, return an array of written English ways of expressing the LaTeX`;
+    const questionPrompt = `Return a JSON array of three ways of expressing:`;
+    const reminder = `It is imperative that you only return the JSON array.`;
+
+    const prompt = [
+      { role: "system", content: instructions },
+      { role: 'user', content: `${questionPrompt}\n"${input}"\n${reminder}` },
+    ];
+
+    try {
+      const chatCompletion = await openai.chat.completions.create({
+        messages: prompt,
+        model: 'gpt-3.5-turbo',
+      });
+
+      if (chatCompletion.choices && chatCompletion.choices.length > 0) {
+        const response = JSON.parse(chatCompletion.choices[0].message.content);
+        console.log(response);
+        return removePrefix(response);
+      }
+    } catch (error) {
+      console.error("Failed to fetch data from OpenAI:", error);
+      return [];
+    }
+  };
+
 
   return (
     <>
@@ -69,6 +107,7 @@ const EditEquations = ({ database, openai }) => {
         titleData={title}
         saveTimeData={saveTime}
         saveChanges={saveChanges}
+        generateDummy={generateDummy}
       />
     </>
   );

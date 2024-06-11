@@ -82,7 +82,7 @@ const Create = ({ database, openai }) => {
       }
     } catch (error) {
       console.error("Failed to fetch data from OpenAI:", error);
-      return ["", "", "", "", ""];
+      return [];
     }
   };
 

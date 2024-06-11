@@ -3,7 +3,7 @@ import { BlockMath } from 'react-katex';
 import EquationTranslations from './EquationTranslations';
 import SaveDate from './SaveDate';
 
-const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) => {
+const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, generateDummy }) => {
   const [equations, setEquations] = useState(equationsData);
   const [title, setTitle] = useState(titleData);
   const [saveTime, setSaveTime] = useState(saveTimeData);
@@ -12,8 +12,11 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) =
   useEffect(() => {
     setEquations(equationsData);
     setTitle(titleData);
+  }, [equationsData, titleData]);
+
+  useEffect(() => {
     setSaveTime(saveTimeData);
-  }, [equationsData, titleData, saveTimeData]);
+  }, [saveTimeData]);
 
   const handleInputChange = (id, event) => {
     const updatedEquations = equations.map(equation => {
@@ -42,30 +45,12 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) =
     setHasUnsavedChanges(true);
   };
 
-  const handleAnswerChange = (id, index, event) => {
-    const newEquations = equations.map((equation) =>
-      equation.id === id
-        ? {
-            ...equation,
-            ans: equation.ans.map((ans, i) => (i === index ? event.target.value : ans)),
-          }
-        : equation
+  const updateAnswers = (equationId, newAnswers) => {
+    setEquations((prevEquations) =>
+      prevEquations.map((equation) =>
+        equation.id === equationId ? { ...equation, ans: newAnswers } : equation
+      )
     );
-    setEquations(newEquations);
-    setHasUnsavedChanges(true);
-  };
-
-  const addAnswerAt = (id) => {
-    const newEquations = equations.map((equation) =>
-      equation.id === id
-        ? {
-            ...equation,
-            ans: [...equation.ans, ""],
-          }
-        : equation
-    );
-    setEquations(newEquations);
-    setHasUnsavedChanges(true);
   };
 
   const addEquationAtIndex = (index) => {
@@ -84,12 +69,13 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) =
   return (
     <div className="create-set-list">
       <div className="top-nav">
-        <input
-          className="set-title"
-          value={title}
-          onChange={handleTitleChange}
-          placeholder="Enter set title"
-        />
+      <input
+        className="set-title"
+        value={"Full Equation Set"}
+        onChange={handleTitleChange}
+        placeholder="Enter set title"
+        disabled={true}
+      />
         <SaveDate date={saveTime} />
         <button onClick={() => saveChanges({ title: title, equations: equations })} className="save-changes">
           <i className="fas fa-save"></i>
@@ -102,7 +88,9 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) =
               <div className="equation-inline">
                 <button onClick={() => editThisEquation(equation.id)} className="edit-equation">
                   <i className="fas fa-edit"></i>
+                  {equation.ans && (
                   <span className="answer-num">({equation.ans.length})</span>
+                  )}
                 </button>
                 <input
                   type="text"
@@ -113,7 +101,7 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges }) =
                 <BlockMath>{equation.latex}</BlockMath>
               </div>
               {equation.expanded && (
-                <EquationTranslations equation={equation} handleAnswerChange={handleAnswerChange} addAnswerAt={addAnswerAt} />
+                <EquationTranslations equation={equation} updateAnswers={updateAnswers} generateDummy={generateDummy} />
               )}
             </div>
           </div>
