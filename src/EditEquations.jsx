@@ -102,7 +102,7 @@ const EditEquations = ({ database, openai }) => {
 
 
   return (
-    <>
+    <div className="page">
       <Nav />
       <EquationForm
         equationsData={equations}
@@ -111,7 +111,7 @@ const EditEquations = ({ database, openai }) => {
         saveChanges={saveChanges}
         generateDummy={generateDummy}
       />
-    </>
+    </div>
   );
 };
 

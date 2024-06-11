@@ -137,7 +137,7 @@ const CreateSet = ({ database, openai }) => {
   };
 
   return (
-    <>
+    <div className="page">
     <Nav/>
     <div className="create-set-list">
       <div className="top-nav">
@@ -205,7 +205,7 @@ const CreateSet = ({ database, openai }) => {
         </div>
       </DragDropContext>
     </div>
-    </>
+    </div>
   );
 };
 

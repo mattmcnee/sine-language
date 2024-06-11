@@ -1,12 +1,19 @@
-.quiz-box{
-	width: 50%;
-	margin: 0 auto;
-	border: 2px solid #ccc;
-	border-radius: 10px;
-	height: 400px;
+.quiz-page{
 	display: flex;
 	flex-direction: column;
-	font-family: sans-serif;
+}
+
+.quiz-content{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.quiz-box{
+	margin: 0 30px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
 .maths-box{

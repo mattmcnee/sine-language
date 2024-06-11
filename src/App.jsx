@@ -9,6 +9,7 @@ import Quiz from './pages/Quiz';
 import Create from './Create';
 import CreateSet from './CreateSet';
 import EditEquations from './EditEquations';
+import './app.scss';
 
 function App ({ newMainTitle }) {
   const [title, setTitle] = useState("Sine Language");

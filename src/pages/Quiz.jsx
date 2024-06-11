@@ -64,9 +64,9 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   }
 
   return (
-    <>
+    <div className="page quiz-page">
       <Nav mainTitle={mainTitle}/>
-      <div>
+      <div className="quiz-content">
         <h1>Score: {score}</h1>
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
@@ -79,7 +79,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

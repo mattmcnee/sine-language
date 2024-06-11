@@ -1,0 +1,38 @@
+html, body, #root {
+  height: 100vh;
+  margin: 0;
+}
+
+.page {
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: scroll;
+  font-family: sans-serif;
+}
+
+/* WebKit Browsers (Chrome, Safari) */
+.page::-webkit-scrollbar {
+  width: 8px; /* Adjust scrollbar width */
+}
+
+.page::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.page::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.page::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+  .page {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
+}
+
