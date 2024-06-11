@@ -10,12 +10,17 @@ const Home = () => {
       navigate('/create-set');
     };
 
+    const quizRedirect = () => {
+      navigate('/quiz/-O-36M-Za0LxFHabqj0h');
+    };
+
   return (
     <>
       <Nav/>
       <div className="home-page">
         <h1>Home Page</h1>
         <button onClick={newSetRedirect}>Create Set</button>
+        <button onClick={quizRedirect}>Play Quiz</button>
       </div>
     </>
   );

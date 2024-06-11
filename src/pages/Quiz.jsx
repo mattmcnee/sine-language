@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import QuizBox from '/src/QuizBox';
 import { set, ref, get } from 'firebase/database';
+import { useParams } from 'react-router-dom';
+import Nav from '/src/Nav';
 
 const Quiz = ({ database }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const { id } = useParams();
 
   const motivs = [
     "well done!",
@@ -14,34 +17,32 @@ const Quiz = ({ database }) => {
     "good work!",
     "perfect!",
     "nice job!"
-    ]
+  ];
 
   useEffect(() => {
-    const getEqData = async (value) => {
-      const dataRef = ref(database, `/equations/${value}`);
-      const snapshot = await get(dataRef);
-      if (snapshot.exists()) {
-        const eqData = snapshot.val();
-        return eqData.ans;
-      } else {
-        return [];
-      }
-    };
-
     const fetchWorksheetData = async () => {
-      const worksheetRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
+      var worksheetRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
+      if (id != null){
+        worksheetRef = ref(database, `/sets/${id}`);
+      }
       try {
         const snapshot = await get(worksheetRef);
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
-          const decodedData = await Promise.all(
-            Object.entries(firebaseData.equations).map(async ([key, value]) => ({
+          const eqDataRef = ref(database, `equation-data/equations/`);
+          const eqSnapshot = await get(eqDataRef);
+
+          if (eqSnapshot.exists()) {
+            const eqData = eqSnapshot.val();
+            const decodedData = Object.entries(firebaseData.equations).map(([key, value]) => ({
               expression: decodeURIComponent(value),
-              validAns: await getEqData(value),
-            }))
-          );
-          console.log(decodedData);
-          setQuizData(decodedData);
+              validAns: eqData[value]?.ans || [],
+            }));
+            console.log(decodedData);
+            setQuizData(decodedData);
+          } else {
+            console.log('No equation data available');
+          }
         } else {
           console.log('No data available');
         }
@@ -53,7 +54,6 @@ const Quiz = ({ database }) => {
     fetchWorksheetData();
   }, [database]);
 
-
   const handleNextQuiz = (isCorrect) => {
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
     if (isCorrect){
@@ -62,21 +62,22 @@ const Quiz = ({ database }) => {
   };
 
   return (
-    <div>
-      <h1>Score: {score}</h1>
-      {quizData.length > 0 && currentQuizIndex < quizData.length && (
-        <QuizBox 
-          key={currentQuizIndex} 
-          expression={quizData[currentQuizIndex].expression} 
-          validAns={quizData[currentQuizIndex].validAns}
-          nextQuiz={handleNextQuiz} 
-          motivs={motivs}
-        />
-      )}
-    </div>
+    <>
+      <Nav/>
+      <div>
+        <h1>Score: {score}</h1>
+        {quizData.length > 0 && currentQuizIndex < quizData.length && (
+          <QuizBox 
+            key={currentQuizIndex} 
+            expression={quizData[currentQuizIndex].expression} 
+            validAns={quizData[currentQuizIndex].validAns}
+            nextQuiz={handleNextQuiz} 
+            motivs={motivs}
+          />
+        )}
+      </div>
+    </>
   );
 };
 
 export default Quiz;
-
-
