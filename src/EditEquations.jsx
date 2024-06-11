@@ -18,8 +18,8 @@ const EditEquations = ({ database, openai }) => {
       .then((snapshot) => {
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
-          console.log(firebaseData);
           const firebaseArray = Object.values(firebaseData);
+          console.log(firebaseArray)
           const transformedEquations = firebaseArray.map((equation, index) => ({
             id: new Date().getTime() + index,
             ans: equation.ans,
@@ -36,21 +36,19 @@ const EditEquations = ({ database, openai }) => {
         console.error('Error getting data:', error);
       });
   }, [database]);
-
   const saveChanges = (sheetData) => {
     const now = new Date();
     
-    // Encode the latex attribute of each equation
+    // encode the latex attribute and remove expanded and id
     const encodedEquations = sheetData.equations.reduce((acc, eq) => {
-      const encodedKey = encodeURIComponent(eq.latex);
-      acc[encodedKey] = eq;
+      const { expanded, id, ...rest } = eq;
+      const encodedKey = encodeURIComponent(rest.latex);
+      acc[encodedKey] = rest;
       return acc;
     }, {});
 
-    // Reference to the equations node in the database
+    // save it
     const existingSheetRef = ref(database, `/equations`);
-    
-    // Set the encoded equations in the database
     set(existingSheetRef, encodedEquations).then(() => {
       setSaveTime(now);
     }).catch(error => {
@@ -60,6 +58,7 @@ const EditEquations = ({ database, openai }) => {
     console.log(sheetData);
     setSaveTime(now);
   };
+
 
   const removePrefix = (arr) => {
     return arr.map(str => {
