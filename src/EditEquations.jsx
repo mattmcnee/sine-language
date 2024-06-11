@@ -13,21 +13,24 @@ const EditEquations = ({ database, openai }) => {
   const { id } = useParams();
 
   useEffect(() => {
-    const worksheetRef = ref(database, `/equations`);
+    const worksheetRef = ref(database, `/equation-data`);
     get(worksheetRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
-          const firebaseArray = Object.values(firebaseData);
-          console.log(firebaseArray)
-          const transformedEquations = firebaseArray.map((equation, index) => ({
+          const firebaseKeys = Object.keys(firebaseData.equations);
+          console.log(firebaseKeys);
+          const transformedEquations = firebaseKeys.map((key, index) => ({
             id: new Date().getTime() + index,
-            ans: equation.ans,
-            latex: decodeURIComponent(equation.latex),
+            ans: firebaseData.equations[key].ans,
+            latex: decodeURIComponent(key),
             expanded: false
           }));
           setEquations(transformedEquations);
+          const newTime = new Date(firebaseData.saveTime)
+          setSaveTime(newTime);
           console.log(transformedEquations);
+          console.log(firebaseData.saveTime);
         } else {
           console.error('Error getting data:', error);
         }
@@ -36,6 +39,7 @@ const EditEquations = ({ database, openai }) => {
         console.error('Error getting data:', error);
       });
   }, [database]);
+
   const saveChanges = (sheetData) => {
     const now = new Date();
     
@@ -43,20 +47,19 @@ const EditEquations = ({ database, openai }) => {
     const encodedEquations = sheetData.equations.reduce((acc, eq) => {
       const { expanded, id, ...rest } = eq;
       const encodedKey = encodeURIComponent(rest.latex);
-      acc[encodedKey] = rest;
+      acc[encodedKey] = { ...rest}; 
       return acc;
     }, {});
 
+    console.log(encodedEquations);
+
     // save it
-    const existingSheetRef = ref(database, `/equations`);
-    set(existingSheetRef, encodedEquations).then(() => {
+    const existingSheetRef = ref(database, `/equation-data`);
+    set(existingSheetRef, {equations: encodedEquations, saveTime: now.toISOString() }).then(() => {
       setSaveTime(now);
     }).catch(error => {
       console.error(`Error updating sheet in Firebase:`, error);
     });
-
-    console.log(sheetData);
-    setSaveTime(now);
   };
 
 
