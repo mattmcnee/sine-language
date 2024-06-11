@@ -4,7 +4,7 @@ import { set, ref, get } from 'firebase/database';
 import { useParams } from 'react-router-dom';
 import Nav from '/src/Nav';
 
-const Quiz = ({ database }) => {
+const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -40,6 +40,7 @@ const Quiz = ({ database }) => {
             }));
             console.log(decodedData);
             setQuizData(decodedData);
+            setMainTitle(firebaseData.title)
           } else {
             console.log('No equation data available');
           }
@@ -54,16 +55,17 @@ const Quiz = ({ database }) => {
     fetchWorksheetData();
   }, [database]);
 
-  const handleNextQuiz = (isCorrect) => {
+  const handleNextQuiz = () => {
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
-    if (isCorrect){
-      setScore((preScore => preScore + 1));
-    }
   };
+
+  const increaseScore = () => {
+    setScore((preScore => preScore + 1));
+  }
 
   return (
     <>
-      <Nav/>
+      <Nav mainTitle={mainTitle}/>
       <div>
         <h1>Score: {score}</h1>
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
@@ -73,6 +75,7 @@ const Quiz = ({ database }) => {
             validAns={quizData[currentQuizIndex].validAns}
             nextQuiz={handleNextQuiz} 
             motivs={motivs}
+            increaseScore={increaseScore}
           />
         )}
       </div>

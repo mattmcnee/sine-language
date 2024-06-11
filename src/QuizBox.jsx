@@ -4,7 +4,7 @@ import 'katex/dist/katex.min.css';
 import './quizBox.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const QuizBox = ({ expression, validAns, nextQuiz, motivs }) => {
+const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [ansState, setAnsState] = useState("check");
   const inputRef = useRef(null);
@@ -21,6 +21,7 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs }) => {
     e.preventDefault();
     if (validAns.includes(userAnswer)) {
       setAnsState("correct")
+      increaseScore();
     } else {
       setAnsState("incorrect")
     }
@@ -47,13 +48,13 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs }) => {
           {ansState === "correct" &&
             <>
             <div className="correct-answer">{motivs[Math.floor(Math.random() * motivs.length)]}</div>
-            <button onClick={() => nextQuiz(true)} className="correct">Continue</button>
+            <button onClick={() => nextQuiz()} className="correct">Continue</button>
             </>
           }
           {ansState === "incorrect" &&
             <>
             <div className="correct-answer">{validAns[0]}</div>
-            <button onClick={() => nextQuiz(false)} className="incorrect">Continue</button>
+            <button onClick={() => nextQuiz()} className="incorrect">Continue</button>
             </>
           }
         </div>

@@ -4,7 +4,7 @@ import sineImg from './sine.png';
 import profileImg from './default.webp';
 import './nav.scss';
 
-const Nav = () => {
+const Nav = ({ mainTitle }) => {
     const navigate = useNavigate();
 
     const handleRedirect = () => {
@@ -15,7 +15,7 @@ const Nav = () => {
       <div className="nav-bar">
         <div className="logo-container" onClick={handleRedirect}>
           <img src={sineImg} alt="My Image" className="main-logo" />
-          <span className="logo-name">Sine Language</span>
+          <span className="logo-name">{mainTitle}</span>
         </div>
         <div className="central-nav">
         </div>
