@@ -1,8 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from '/src/Nav';
 
-const Home = () => {
+const Home = ({setMainTitle}) => {
+
+  useEffect(() => {
+    setMainTitle("Sine Language");
+  }, [setMainTitle]);
 
     const navigate = useNavigate();
 

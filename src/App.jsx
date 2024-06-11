@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
@@ -11,7 +11,6 @@ import CreateSet from './CreateSet';
 import EditEquations from './EditEquations';
 
 function App ({ newMainTitle }) {
-  const [count, setCount] = useState(0);
   const [title, setTitle] = useState("Sine Language");
 
   // Config
@@ -30,18 +29,20 @@ function App ({ newMainTitle }) {
     dangerouslyAllowBrowser: true,
   });
 
-  newMainTitle("Sine Language");
-
   const setMainTitle = (data) => {
-    newMainTitle(data);
     setTitle(data);
   }
+
+  useEffect(() => {
+    newMainTitle(title);
+    console.log(title)
+  }, [title]);
 
   return (
     <>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/" element={<Home setMainTitle={setMainTitle}/>}/>
           <Route exact path="/quiz/:id?" element={<Quiz database={database} setMainTitle={setMainTitle} mainTitle={title}/>}/>
           <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
           <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>
