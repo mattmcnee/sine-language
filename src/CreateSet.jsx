@@ -179,6 +179,7 @@ const CreateSet = ({ database, openai }) => {
                         type="text"
                         value={equation.latex}
                         onChange={(event) => handleInputChange(equation.id, event)}
+                        className="main-input"
                       />
                       <BlockMath>{equation.latex}</BlockMath>
                       {equation.ans &&

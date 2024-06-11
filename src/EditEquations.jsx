@@ -7,6 +7,7 @@ import { BlockMath } from 'react-katex';
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import SaveDate from './SaveDate';
 import Nav from './Nav';
+import EquationTranslations from './EquationTranslations';
 
 const EditEquations = ({ database, openai }) => {
   const [equations, setEquations] = useState([]);
@@ -27,7 +28,7 @@ const EditEquations = ({ database, openai }) => {
               id: new Date().getTime() + index,
               ans: equation.ans,
               latex: decodeURIComponent(equation.latex),
-              expanded: true
+              expanded: false
             }));
             setEquations(transformedEquations);
             console.log(transformedEquations);
@@ -44,7 +45,6 @@ const EditEquations = ({ database, openai }) => {
   }, []);
 
   const handleInputChange = async (id, event) => {
-    // update stored latex value
     const updatedEquations = equations.map(equation => {
       if (equation.id === id) {
         return { ...equation, latex: event.target.value };
@@ -83,19 +83,41 @@ const EditEquations = ({ database, openai }) => {
     setTitle(event.target.value);
   };
 
-  const editThisEquation = (index) => {
-
-  }
-
-  const handleAnswerChange = (id, index, event) => {
+  const editThisEquation = (id) => {
     const updatedEquations = equations.map(equation => {
       if (equation.id === id) {
-        return { ...equation, latex: event.target.value };
+        return { ...equation, expanded: !equation.expanded };
       }
       return equation;
     });
     setEquations(updatedEquations);
   }
+
+  const handleAnswerChange = (id, index, event) => {
+    const newEquations = equations.map((equation) =>
+      equation.id === id
+        ? {
+            ...equation,
+            ans: equation.ans.map((ans, i) => (i === index ? event.target.value : ans)),
+          }
+        : equation
+    );
+    setEquations(newEquations);
+    console.log(newEquations)
+  };
+
+  const addAnswerAt = (id) => {
+    const newEquations = equations.map((equation) =>
+      equation.id === id
+        ? {
+            ...equation,
+            ans: [...equation.ans, ""],
+          }
+        : equation
+    );
+    setEquations(newEquations);
+  }
+
 
   return (
     <>
@@ -119,30 +141,21 @@ const EditEquations = ({ database, openai }) => {
             <div key={equation.id} className="equation-container">
               <div className="equation-content">
                 <div className="equation-inline">
-                  <button onClick={() => editThisEquation(index)} className="edit-equation">
+                  <button onClick={() => editThisEquation(equation.id)} className="edit-equation">
                     <i className="fas fa-edit"></i>
+                    <span className="answer-num">({equation.ans.length})</span>
                   </button>
                   <input
                     type="text"
                     value={equation.latex}
                     onChange={(event) => handleInputChange(equation.id, event)}
+                    className="main-input"
                   />
                   <BlockMath>{equation.latex}</BlockMath>
-                  <span>({equation.ans.length} translations)</span>
                 </div>
                 {equation.expanded && (
-                <div className="equation-translations">
-                  {equation.ans.map((ans, index) => (
-                    <div key={index} className="equation-answer">
-                      <input
-                        type="text"
-                        value={ans}
-                        onChange={(event) => handleAnswerChange(equation.id, index, event)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+                  <EquationTranslations equation={equation} handleAnswerChange={handleAnswerChange} addAnswerAt={addAnswerAt} />
+                )}              
               </div>
             </div>
           ))}

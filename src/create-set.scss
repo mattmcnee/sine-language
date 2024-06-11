@@ -90,11 +90,15 @@ body {
     align-items: center;
   }
 
+  .equation-inline div:last-child{
+    flex: 1;
+  }
+
   .katex-display{
     margin: 20px 10px;
   }
 
-  input{
+  .main-input{
     border: none;
     border-bottom: 2px solid lightgrey;
     border-radius: 0;
@@ -132,5 +136,41 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+  }
+
+  .answer-num{
+    margin-left: 5px;
+  }
+
+  .equation-answer{
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .equation-answer-box{
+    flex-grow: 1;
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    border-radius: 0;
+    outline: none;
+    margin: 10px 20px;
+  }
+
+  .equation-add-box{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+
+  .equation-add-button{
+    width: 30px;
+    height: 30px;
+    background-color: lightgrey;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
   }
 }
