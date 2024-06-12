@@ -8,6 +8,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [length, setLength] = useState(0);
   const { id } = useParams();
 
   const motivs = [
@@ -67,7 +68,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     <div className="page quiz-page">
       <Nav mainTitle={mainTitle}/>
       <div className="quiz-content">
-        <h1>Score: {score}</h1>
+        <span>Score: {score}</span>
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
             key={currentQuizIndex} 
