@@ -101,10 +101,9 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
       <div className="top-nav">
       <input
         className="set-title"
-        value={"Full Equation Set"}
+        value={title}
         onChange={handleTitleChange}
         placeholder="Enter set title"
-        disabled={true}
       />
         <SaveDate date={saveTime} />
         <button onClick={() => saveChanges({ title: title, equations: equations })} className="save-changes">

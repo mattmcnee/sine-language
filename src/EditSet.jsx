@@ -98,7 +98,7 @@ const EditSet = ({ database, openai }) => {
       return acc;
     }, {});
 
-    const theSetData = {equations: theSetEquations, title: title, saveTime: now.toISOString()};
+    const theSetData = {equations: theSetEquations, title: sheetData.title, saveTime: now.toISOString()};
 
     console.log(theSetData)
     if (id === "new" || id === null) { // for creating a new sheet
