@@ -1,0 +1,80 @@
+.bar-content {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	position: relative;
+	background: transparent;
+	display: flex;
+  justify-content: center;
+  width: 100%;
+  transform: translateY(-10px);
+  transition: transform 0.5s ease;
+  margin-top: 10px;
+}
+
+.bar-content:hover {
+  transform: translateY(-3px);
+}
+
+.bar-content .progress-container {
+  width: 90%;
+  height: 30px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: flex-end;
+  background: transparent;
+}
+
+
+.progress-container .segment {
+	margin: 0 2px;
+	min-width: 5px;
+	height: 100%;
+	display: flex;
+	align-items: flex-end;
+}
+
+.segment .grey {
+  background-color: #aaa;
+  border-radius: 4px;
+  height: 6px;
+  width: 100%;
+
+
+}
+.segment .progress {
+  background-color: gold;
+  border-radius: 4px;
+  height: 6px;
+  display: none;
+}
+
+
+.progress-container .segment:hover{
+  cursor: pointer;
+}
+
+.segment .video {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 20px;
+    width: 100%;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease;
+    overflow-y: hidden;
+    color: black;
+    background-color: transparent;
+    pointer-events: none;
+    padding: 0 8px;
+    border-radius: 7.5px;
+}
+
+.progress-container .segment:hover .video {
+    opacity: 1;
+    visibility:visible;
+}
+

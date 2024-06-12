@@ -3,6 +3,7 @@ import QuizBox from '/src/QuizBox';
 import { set, ref, get } from 'firebase/database';
 import { useParams } from 'react-router-dom';
 import Nav from '/src/Nav';
+import ProgressBar from '/src/ProgressBar';
 
 const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
@@ -68,6 +69,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     <div className="page quiz-page">
       <Nav mainTitle={mainTitle}/>
       <div className="quiz-content">
+        <ProgressBar currentVid={2} timePlayed={230} />
         <span>Score: {score}</span>
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
