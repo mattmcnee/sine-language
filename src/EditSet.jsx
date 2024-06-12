@@ -38,19 +38,25 @@ const EditSet = ({ database, openai }) => {
 
           if (setsSnapshot.exists()) {
             const setsData = setsSnapshot.val();
-            const filteredKeys = Object.keys(setsData.equations);
+            console.log("eq", setsData)
+            if (setsData.equations){
+              const filteredKeys = Object.keys(setsData.equations);
 
-            // Filter the equations data by the keys from the second request
-            const filteredEquations = filteredKeys.map((key, index) => ({
-              id: new Date().getTime() + index,
-              ans: allEquations[key]?.ans || false,
-              latex: decodeURIComponent(key),
-              expanded: false,
-              level: setsData.equations[key].level
-            }));
+              // Filter the equations data by the keys from the second request
+              const filteredEquations = filteredKeys.map((key, index) => ({
+                id: new Date().getTime() + index,
+                ans: allEquations[key]?.ans || false,
+                latex: decodeURIComponent(key),
+                expanded: false,
+                level: setsData.equations[key].level ? setsData.equations[key].level : '1'
+              }));
 
-            setEquations(filteredEquations);
-            setTitle(setsData.title);
+              setEquations(filteredEquations);
+              setTitle(setsData.title);
+              setSaveTime(setsData.saveTime)
+            } else{
+              setEquations([]);
+            }
           } else {
             console.error('Error getting set data: No data found for the specified ID');
           }
@@ -88,11 +94,13 @@ const EditSet = ({ database, openai }) => {
     const theSetEquations = sheetData.equations.reduce((acc, eq) => {
       const { latex, ans, level } = eq;
       const encodedKey = encodeURIComponent(latex);
-      acc[`equations/${encodedKey}`] = { latex, ans };
+      acc[`${encodedKey}`] = { latex, ans, level };
       return acc;
     }, {});
 
-    const theSetData = {...theSetEquations, title: title};
+    const theSetData = {equations: theSetEquations, title: title, saveTime: now.toISOString()};
+
+    console.log(theSetData)
     if (id === "new" || id === null) { // for creating a new sheet
       const newSheetRef = push(ref(database, 'sets/'));
       set(newSheetRef, theSetData).then(() => {
@@ -105,7 +113,7 @@ const EditSet = ({ database, openai }) => {
       const existingSheetRef = ref(database, `sets/${id}`);
       set(existingSheetRef, theSetData).then(() => {
         setSaveTime(now);
-        setHasUnsavedChanges(false);
+        // setHasUnsavedChanges(false);
       }).catch(error => {
         console.error(`Error updating sheet ${id} in Firebase:`, error);
       });

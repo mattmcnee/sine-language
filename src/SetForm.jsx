@@ -18,6 +18,18 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
     setSaveTime(saveTimeData);
   }, [saveTimeData]);
 
+  const handleLevelChange = (id, event) => {
+    const updatedEquations = equations.map(equation => {
+      if (equation.id === id) {
+        return { ...equation, level: event.target.value };
+      }
+      return equation;
+    });
+    setEquations(updatedEquations);
+    setHasUnsavedChanges(true);
+  };
+
+
   const handleInputChange = (id, event) => {
     const updatedEquations = equations.map(equation => {
       if (equation.id === id) {
@@ -29,13 +41,6 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
     });
     setEquations(updatedEquations);
     setHasUnsavedChanges(true);
-
-    // const mergedEquation = mergeWithUnfiltered(editedEquation);
-    // setEquations((updatedEquations) =>
-    //   prevEquations.map((eq) =>
-    //     eq.latex === editedEquation.latex ? mergedEquation : eq
-    //   )
-    // );
   };
 
   const mergeWithUnfiltered = (equation) => {
@@ -87,6 +92,7 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
   const handleDeleteEquation = (index) => {
     const newEquations = equations.filter((_, i) => i !== index);
     setEquations(newEquations);
+    setHasUnsavedChanges(true);
   };
 
   return (
@@ -126,6 +132,14 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
                 <div className="maths-box">
                   <BlockMath>{equation.latex}</BlockMath>
                 </div>
+                <input
+                  type="number"
+                  value={equation.level}
+                  onChange={(event) => handleLevelChange(equation.id, event)}
+                  className="level-input"
+                  min="1"
+                  max="16"
+                />
                 <button
                   className="delete-button"
                   onClick={() => handleDeleteEquation(index)}
