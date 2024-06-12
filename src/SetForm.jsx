@@ -81,6 +81,7 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
       latex: "",
       ans: [],
       expanded: false,
+      level: 1
     };
     const newEquations = [...equations];
     newEquations.splice(index, 0, newEquation);
