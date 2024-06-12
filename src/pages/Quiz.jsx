@@ -69,8 +69,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     <div className="page quiz-page">
       <Nav mainTitle={mainTitle}/>
       <div className="quiz-content">
-        <ProgressBar currentVid={2} timePlayed={230} />
-        <span>Score: {score}</span>
+        <ProgressBar currentVid={2} timePlayed={230} score={score} />
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
             key={currentQuizIndex} 
