@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate  } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import QuizBox from '/src/QuizBox';
 import { ref, set, get, push } from 'firebase/database';
 import './create-set.scss';
@@ -24,10 +24,11 @@ const CreateSet = ({ database, openai }) => {
         .then((snapshot) => {
           if (snapshot.exists()) {
             const firebaseData = snapshot.val();
-            const transformedEquations = firebaseData.equations.map((equation, index) => ({
+            const transformedEquations = Object.keys(firebaseData.equations).map((key, index) => ({
               id: new Date().getTime() + index,
               ans: false,
-              latex: decodeURIComponent(equation)
+              latex: decodeURIComponent(key),
+              level: firebaseData.equations[key].level
             }));
             setEquations(transformedEquations);
             setTitle(firebaseData.title)
@@ -43,7 +44,7 @@ const CreateSet = ({ database, openai }) => {
 
         });
     }else{
-      setEquations([{id: new Date().getTime(), ans: false, latex: ""}]);
+      setEquations([{id: new Date().getTime(), ans: false, latex: "", level: 1}]);
     }
   }, []);
 
@@ -63,7 +64,8 @@ const CreateSet = ({ database, openai }) => {
     const newEquation = {
       id: new Date().getTime(),
       ans: false,
-      latex: ""
+      latex: "",
+      level: 1
     };
     const updatedEquations = [...equations];
     updatedEquations.splice(index, 0, newEquation);
@@ -94,12 +96,34 @@ const CreateSet = ({ database, openai }) => {
     console.log(newEquations);
   };
 
+  const handleLevelChange = (id, event) => {
+    const updatedEquations = equations.map(equation => {
+      if (equation.id === id) {
+        return { ...equation, level: event.target.value };
+      }
+      return equation;
+    });
+    setEquations(updatedEquations);
+    setHasUnsavedChanges(true);
+  };
+
   const saveChanges = () => {
     const now = new Date();
-    const latexEquations = equations.map(eq => encodeURIComponent(eq.latex));
-    const sheetData = {title: title, equations: latexEquations}
+    const encodedEquations = equations.map(eq => {
+      const encodedKey = encodeURIComponent(eq.latex);
+      return {
+        [encodedKey]: {
+          latex: eq.latex,
+          level: eq.level
+        }
+      };
+    });
 
-    if (id == "new" || id == null) { // for creating a new sheet
+    // Flatten the array of objects into a single object
+    const latexEquations = Object.assign({}, ...encodedEquations);
+    const sheetData = {title: title, equations: latexEquations};
+
+    if (id === "new" || id === null) { // for creating a new sheet
       const newSheetRef = push(ref(database, 'sets/'));
       set(newSheetRef, sheetData).then(() => {
         id = newSheetRef.key;
@@ -171,24 +195,34 @@ const CreateSet = ({ database, openai }) => {
                         </button>
                       </div>
                       <div className="equation-content">
-                      <div className="equation-inline">
-                      <div className="drag-handle" {...provided.dragHandleProps}>
-                        <i className="fas fa-bars"></i>
-                      </div>
-                      <input
-                        type="text"
-                        value={equation.latex}
-                        onChange={(event) => handleInputChange(equation.id, event)}
-                        className="main-input"
-                      />
-                      <BlockMath>{equation.latex}</BlockMath>
-                      {equation.ans &&
-                        <i className="fas fa-check"></i>
-                      }
-                      {!equation.ans && equation.latex != "" &&
-                        <i className="fas fa-times"></i>
-                      }
-                      </div>
+                        <div className="equation-inline">
+                          <div className="drag-handle" {...provided.dragHandleProps}>
+                            <i className="fas fa-bars"></i>
+                          </div>
+                          <input
+                            type="text"
+                            value={equation.latex}
+                            onChange={(event) => handleInputChange(equation.id, event)}
+                            className="main-input"
+                          />
+                          
+
+                          <BlockMath>{equation.latex}</BlockMath>
+                          {equation.ans &&
+                            <i className="fas fa-check"></i>
+                          }
+                          {!equation.ans && equation.latex != "" &&
+                            <i className="fas fa-times"></i>
+                          }
+                          <input
+                            type="number"
+                            value={equation.level}
+                            onChange={(event) => handleLevelChange(equation.id, event)}
+                            className="level-input"
+                            min="1"
+                            max="16"
+                          />
+                        </div>
                       </div>
                     </div>
                   )}

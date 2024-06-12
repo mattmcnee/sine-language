@@ -57,7 +57,7 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
     const newEquation = {
       id: new Date().getTime(),
       latex: "",
-      ans: [""],
+      ans: [],
       expanded: false,
     };
     const newEquations = [...equations];

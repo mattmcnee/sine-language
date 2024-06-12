@@ -18,6 +18,10 @@ const Home = ({setMainTitle}) => {
       navigate('/quiz/-O-36M-Za0LxFHabqj0h');
     };
 
+    const editRedirect = () => {
+      navigate('/edit-equations');
+    };
+
   return (
     <>
       <Nav/>
@@ -25,6 +29,7 @@ const Home = ({setMainTitle}) => {
         <h1>Home Page</h1>
         <button onClick={newSetRedirect}>Create Set</button>
         <button onClick={quizRedirect}>Play Quiz</button>
+        <button onClick={editRedirect}>Edit Equations</button>
       </div>
     </>
   );
