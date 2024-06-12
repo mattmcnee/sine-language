@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const EquationTranslations = ({ equation, updateAnswers, generateDummy }) => {
-  const [answers, setAnswers] = useState([...equation.ans]);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    setAnswers([...equation.ans]);
+    if(equation.ans){
+      setAnswers([...equation.ans]);
+    } else{
+      setAnswers([]);
+    }
   }, [equation.ans]);
 
   const handleAnswerChange = (index, event) => {

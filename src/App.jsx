@@ -9,6 +9,7 @@ import Quiz from './pages/Quiz';
 import Create from './Create';
 import CreateSet from './CreateSet';
 import EditEquations from './EditEquations';
+import EditSet from './EditSet';
 import './app.scss';
 
 function App ({ newMainTitle }) {
@@ -48,6 +49,7 @@ function App ({ newMainTitle }) {
           <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
           <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
+          <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>
         </Routes>
       </Router>

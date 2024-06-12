@@ -3,7 +3,7 @@ import { BlockMath } from 'react-katex';
 import EquationTranslations from './EquationTranslations';
 import SaveDate from './SaveDate';
 
-const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, generateDummy }) => {
+const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, generateDummy, unfilteredEquations }) => {
   const [equations, setEquations] = useState(equationsData);
   const [title, setTitle] = useState(titleData);
   const [saveTime, setSaveTime] = useState(saveTimeData);
@@ -21,12 +21,29 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
   const handleInputChange = (id, event) => {
     const updatedEquations = equations.map(equation => {
       if (equation.id === id) {
-        return { ...equation, latex: event.target.value };
+        const newLocal = { ...equation, latex: event.target.value };
+        console.log(newLocal)
+        return mergeWithUnfiltered(newLocal);
       }
       return equation;
     });
     setEquations(updatedEquations);
     setHasUnsavedChanges(true);
+
+    // const mergedEquation = mergeWithUnfiltered(editedEquation);
+    // setEquations((updatedEquations) =>
+    //   prevEquations.map((eq) =>
+    //     eq.latex === editedEquation.latex ? mergedEquation : eq
+    //   )
+    // );
+  };
+
+  const mergeWithUnfiltered = (equation) => {
+    const encodedKey = encodeURIComponent(equation.latex);
+    if (unfilteredEquations[encodedKey]) {
+      return { ...unfilteredEquations[encodedKey], ...equation, ans: unfilteredEquations[encodedKey].ans };
+    }
+    return equation;
   };
 
   const handleTitleChange = (event) => {
@@ -67,6 +84,11 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
     console.log(equations);
   };
 
+  const handleDeleteEquation = (index) => {
+    const newEquations = equations.filter((_, i) => i !== index);
+    setEquations(newEquations);
+  };
+
   return (
     <div className="create-set-list">
       <div className="top-nav">
@@ -83,14 +105,16 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
         </button>
       </div>
       <div className="drop-scroll" id="set-scroll">
-        {equations.map((equation) => (
+        {equations.map((equation, index) => (
           <div key={equation.id} className="equation-container">
             <div className="equation-content">
               <div className="equation-inline">
                 <button onClick={() => editThisEquation(equation.id)} className="edit-equation">
                   <i className="fas fa-edit"></i>
-                  {equation.ans && (
-                  <span className="answer-num">({equation.ans.length})</span>
+                  {equation.ans ? (
+                    <span className="answer-num">({equation.ans.length})</span>
+                  ):(
+                    <span className="answer-num">(0)</span>
                   )}
                 </button>
                 <input
@@ -102,6 +126,12 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
                 <div className="maths-box">
                   <BlockMath>{equation.latex}</BlockMath>
                 </div>
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteEquation(index)}
+                >
+                  <i className="fas fa-trash"></i>
+                </button>
               </div>
               {equation.expanded && (
                 <EquationTranslations equation={equation} updateAnswers={updateAnswers} generateDummy={generateDummy} />
