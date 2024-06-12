@@ -77,7 +77,7 @@ const ProgressBar = ({ currentVid, timePlayed, score }) => {
 
   return (
     <div className="main-bar-container">
-    <span className="bar-span">Stage {currentVid+1}</span>
+    <span className="bar-span">Level {currentVid+1}</span>
     <div className="bar-content">
       <div className="progress-container" id="main-bar">
         {progressData.map((video, index) => {

@@ -20,10 +20,11 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validAns.includes(userAnswer)) {
-      setAnsState("correct")
-      increaseScore();
+      setAnsState("correct");
+      increaseScore(true);
     } else {
-      setAnsState("incorrect")
+      setAnsState("incorrect");
+      increaseScore(false);
     }
   };
 
@@ -48,13 +49,13 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           {ansState === "correct" &&
             <>
             <div className="correct-answer">{motivs[Math.floor(Math.random() * motivs.length)]}</div>
-            <button onClick={() => nextQuiz()} className="correct">Continue</button>
+            <button type="submit" onClick={() => nextQuiz()} className="correct">Continue</button>
             </>
           }
           {ansState === "incorrect" &&
             <>
             <div className="correct-answer">{validAns[0]}</div>
-            <button onClick={() => nextQuiz()} className="incorrect">Continue</button>
+            <button type="submit" onClick={() => nextQuiz()} className="incorrect">Continue</button>
             </>
           }
         </div>

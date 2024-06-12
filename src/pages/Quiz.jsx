@@ -4,6 +4,7 @@ import { set, ref, get } from 'firebase/database';
 import { useParams } from 'react-router-dom';
 import Nav from '/src/Nav';
 import ProgressBar from '/src/ProgressBar';
+import GlowEffect from '/src/GlowEffect';
 
 const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
@@ -11,6 +12,14 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [score, setScore] = useState(0);
   const [length, setLength] = useState(0);
   const { id } = useParams();
+
+  // glow effect
+  const [isGlowing, setIsGlowing] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const handleGlow = () => {
+    setIsGlowing(true);
+    setTimeout(() => setIsGlowing(false), 1000);
+  };
 
   const motivs = [
     "well done!",
@@ -61,12 +70,19 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
   };
 
-  const increaseScore = () => {
-    setScore((preScore => preScore + 1));
+  const increaseScore = (doInrease) => {
+    if (doInrease){
+      setScore((preScore => preScore + 1));
+      setIsCorrect(true);     
+    } else{
+      setIsCorrect(false); 
+    }
+    handleGlow(true);
   }
 
   return (
     <div className="page quiz-page">
+      <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect}/>
       <Nav mainTitle={mainTitle}/>
       <div className="quiz-content">
         <ProgressBar currentVid={2} timePlayed={230} score={score} />
