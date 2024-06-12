@@ -19,12 +19,16 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validAns.includes(userAnswer)) {
-      setAnsState("correct");
-      increaseScore(true);
+    if(ansState=="check"){
+      if (validAns.includes(userAnswer)) {
+        setAnsState("correct");
+        increaseScore(true);
+      } else {
+        setAnsState("incorrect");
+        increaseScore(false);
+      }
     } else {
-      setAnsState("incorrect");
-      increaseScore(false);
+      nextQuiz()
     }
   };
 

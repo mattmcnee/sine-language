@@ -32,35 +32,57 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
 
   useEffect(() => {
     const fetchWorksheetData = async () => {
-      var worksheetRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
+      var setsRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
       if (id != null){
-        worksheetRef = ref(database, `/sets/${id}`);
+        setsRef = ref(database, `/sets/${id}`);
       }
-      try {
-        const snapshot = await get(worksheetRef);
-        if (snapshot.exists()) {
-          const firebaseData = snapshot.val();
-          const eqDataRef = ref(database, `equation-data/equations/`);
-          const eqSnapshot = await get(eqDataRef);
 
-          if (eqSnapshot.exists()) {
-            const eqData = eqSnapshot.val();
-            const decodedData = Object.entries(firebaseData.equations).map(([key, value]) => ({
-              expression: decodeURIComponent(value),
-              validAns: eqData[value]?.ans || [],
-            }));
-            console.log(decodedData);
-            setQuizData(decodedData);
-            setMainTitle(firebaseData.title)
-          } else {
-            console.log('No equation data available');
-          }
-        } else {
-          console.log('No data available');
+      const setsSnapshot = await get(setsRef);
+      if (setsSnapshot.exists()) {
+        const setsData = setsSnapshot.val();
+        console.log("eq", setsData)
+        if (setsData.equations){
+          const filteredKeys = Object.keys(setsData.equations);
+          const filteredEquations = filteredKeys.map((key, index) => ({
+            id: new Date().getTime() + index,
+            ans: setsData.equations[key].ans || [],
+            latex: decodeURIComponent(key),
+            level: setsData.equations[key].level || '1'
+          }));
+          console.log(filteredEquations)
+          setQuizData(filteredEquations)
+          setMainTitle(setsData.title)
         }
-      } catch (error) {
-        console.error('Error getting data:', error);
       }
+
+
+
+      // try {
+      //   const snapshot = await get(worksheetRef);
+      //   if (snapshot.exists()) {
+      //     const firebaseData = snapshot.val();
+      //     const eqDataRef = ref(database, `equation-data/equations/`);
+      //     const eqSnapshot = await get(eqDataRef);
+
+      //     if (eqSnapshot.exists()) {
+      //       const eqData = eqSnapshot.val();
+      //       console.log(eqData);
+      //       const decodedData = Object.entries(firebaseData.equations).map(([key, value]) => ({
+      //         expression: decodeURIComponent(value),
+      //         validAns: eqData[value]?.ans || [],
+      //       }));
+      //       console.log(decodedData);
+      //       setQuizData(decodedData);
+      //       setMainTitle(firebaseData.title)
+      //     } else {
+      //       console.log('No equation data available');
+      //     }
+      //   } else {
+      //     console.log('No data available');
+      //   }
+      // } catch (error) {
+      //   console.error('Error getting data:', error);
+      // }
     };
 
     fetchWorksheetData();
@@ -89,8 +111,8 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
             key={currentQuizIndex} 
-            expression={quizData[currentQuizIndex].expression} 
-            validAns={quizData[currentQuizIndex].validAns}
+            expression={quizData[currentQuizIndex].latex} 
+            validAns={quizData[currentQuizIndex].ans}
             nextQuiz={handleNextQuiz} 
             motivs={motivs}
             increaseScore={increaseScore}
