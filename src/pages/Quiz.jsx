@@ -54,35 +54,6 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
           setMainTitle(setsData.title)
         }
       }
-
-
-
-      // try {
-      //   const snapshot = await get(worksheetRef);
-      //   if (snapshot.exists()) {
-      //     const firebaseData = snapshot.val();
-      //     const eqDataRef = ref(database, `equation-data/equations/`);
-      //     const eqSnapshot = await get(eqDataRef);
-
-      //     if (eqSnapshot.exists()) {
-      //       const eqData = eqSnapshot.val();
-      //       console.log(eqData);
-      //       const decodedData = Object.entries(firebaseData.equations).map(([key, value]) => ({
-      //         expression: decodeURIComponent(value),
-      //         validAns: eqData[value]?.ans || [],
-      //       }));
-      //       console.log(decodedData);
-      //       setQuizData(decodedData);
-      //       setMainTitle(firebaseData.title)
-      //     } else {
-      //       console.log('No equation data available');
-      //     }
-      //   } else {
-      //     console.log('No data available');
-      //   }
-      // } catch (error) {
-      //   console.error('Error getting data:', error);
-      // }
     };
 
     fetchWorksheetData();
