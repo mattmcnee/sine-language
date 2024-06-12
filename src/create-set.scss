@@ -90,10 +90,6 @@ body {
     align-items: center;
   }
 
-  .equation-inline div:last-child{
-    flex: 1;
-  }
-
   .katex-display{
     margin: 20px 10px;
   }
@@ -105,6 +101,8 @@ body {
     outline: none;
     width: 40%;
     margin: 20px 10px 10px 10px;
+    font-size: inherit;
+    padding: 2px;
   }
 
   .drag-handle{
@@ -154,6 +152,27 @@ body {
   .equation-answer{
     display: flex;
     flex-direction: row;
+  }
+
+  .level-input-span{
+    border-bottom: 2px solid lightgrey;
+    border-radius: 0;
+    margin: 20px 0 10px 0;
+    padding: 2px;
+    display: none;
+  }
+
+  .level-input{
+    border: none;
+    border-left: 2px solid lightgrey;
+    border-radius: 0;
+    outline: none;
+    margin: 10px 20px 10px 0;
+    width: 16px;
+    text-align: center;
+    font-size: inherit;
+    padding: 2px;
+    padding-left: 20px;
   }
 
 

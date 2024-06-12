@@ -205,15 +205,17 @@ const CreateSet = ({ database, openai }) => {
                             onChange={(event) => handleInputChange(equation.id, event)}
                             className="main-input"
                           />
-                          
 
-                          <BlockMath>{equation.latex}</BlockMath>
-                          {equation.ans &&
+                          <div className="maths-box">
+                            <BlockMath>{equation.latex}</BlockMath>
+                          </div>
+                          {/*{equation.ans &&
                             <i className="fas fa-check"></i>
                           }
                           {!equation.ans && equation.latex != "" &&
                             <i className="fas fa-times"></i>
-                          }
+                          }*/}
+                          <span className="level-input-span">Level</span>
                           <input
                             type="number"
                             value={equation.level}

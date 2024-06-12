@@ -98,7 +98,9 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
                   onChange={(event) => handleInputChange(equation.id, event)}
                   className="main-input"
                 />
-                <BlockMath>{equation.latex}</BlockMath>
+                <div className="maths-box">
+                  <BlockMath>{equation.latex}</BlockMath>
+                </div>
               </div>
               {equation.expanded && (
                 <EquationTranslations equation={equation} updateAnswers={updateAnswers} generateDummy={generateDummy} />
