@@ -49,7 +49,7 @@
 }
 
 .user-input .bottom-box button{
-	background: none;
+	background-color: white;
 	border: none;
 	cursor: pointer;
 	padding: 8px 10px;
@@ -57,13 +57,13 @@
 	border-radius: 10px;
 }
 
-.user-input .bottom-box button.correct{
+/*.user-input .bottom-box button.correct{
 	border-color: green;
 }
 
 .user-input .bottom-box button.incorrect{
 	border-color: red;
-}
+}*/
 
 .user-input .bottom-box .correct-answer{
 	flex: 1;

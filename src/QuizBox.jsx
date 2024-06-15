@@ -53,14 +53,14 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           {ansState === "correct" &&
             <>
             <div className="correct-answer">{motivs[Math.floor(Math.random() * motivs.length)]}</div>
-            <button type="submit" onClick={() => nextQuiz()} className="correct">Continue</button>
+            <button type="submit" onClick={() => nextQuiz()}>Continue</button>
             </>
           }
           {ansState === "incorrect" &&
             <>
             <button className="">I was right</button>
             <div className="correct-answer">{validAns[0]}</div>
-            <button type="submit" onClick={() => nextQuiz()} className="incorrect">Continue</button>
+            <button type="submit" onClick={() => nextQuiz()}>Continue</button>
             </>
           }
         </div>

@@ -8,6 +8,7 @@ import GlowEffect from '/src/GlowEffect';
 
 const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
+  const [leveledQuizData, setLeveledQuizData] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [length, setLength] = useState(0);
@@ -30,6 +31,18 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     "nice job!"
   ];
 
+  function groupQuestionsByLevel(quizData) {
+    let groupedQuestions = {};
+    quizData.forEach(question => {
+        let level = question.level || 1;
+        if (!groupedQuestions[level]) {
+            groupedQuestions[level] = [];
+        }
+        groupedQuestions[level].push(question);
+    });
+    return Object.keys(groupedQuestions).map(level => groupedQuestions[level]);
+  }
+
   useEffect(() => {
     const fetchWorksheetData = async () => {
       var setsRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
@@ -49,8 +62,8 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
             latex: decodeURIComponent(key),
             level: setsData.equations[key].level || '1'
           }));
-          console.log(filteredEquations)
           setQuizData(filteredEquations)
+          setLeveledQuizData(groupQuestionsByLevel(filteredEquations))
           setMainTitle(setsData.title)
         }
       }
@@ -78,7 +91,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
       <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect}/>
       <Nav mainTitle={mainTitle}/>
       <div className="quiz-content">
-        <ProgressBar currentVid={2} timePlayed={230} score={score} />
+        <ProgressBar currentVid={2} timePlayed={230} level={1} score={score} quizData={leveledQuizData} />
         {quizData.length > 0 && currentQuizIndex < quizData.length && (
           <QuizBox 
             key={currentQuizIndex} 
