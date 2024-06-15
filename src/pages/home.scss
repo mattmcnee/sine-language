@@ -1,0 +1,44 @@
+.home-page {
+  .sets-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .set-card {
+    width: 200px;
+    margin: 20px;
+    padding: 10px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    border-radius: 8px;
+  	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .set-card .title {
+    text-align: center;
+  }
+
+  .edit-button {
+    align-self: flex-end;
+    border: none;
+    outline: none;
+    padding: 12px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .create-set{
+  	margin: 90px 20px;
+  	cursor: pointer;
+  	border: none;
+  	outline: none;
+  	background: transparent;
+  	border-radius: 8px;
+  	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

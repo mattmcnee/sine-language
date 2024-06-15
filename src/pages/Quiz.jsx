@@ -5,10 +5,12 @@ import { useParams } from 'react-router-dom';
 import Nav from '/src/Nav';
 import ProgressBar from '/src/ProgressBar';
 import GlowEffect from '/src/GlowEffect';
+import QuizCompletion from '/src/QuizCompletion';
 
 const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
   const [leveledQuizData, setLeveledQuizData] = useState([]);
+  const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [length, setLength] = useState(0);
@@ -34,11 +36,11 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   function groupQuestionsByLevel(quizData) {
     let groupedQuestions = {};
     quizData.forEach(question => {
-        let level = question.level || 1;
-        if (!groupedQuestions[level]) {
-            groupedQuestions[level] = [];
-        }
-        groupedQuestions[level].push(question);
+      let level = question.level || 1;
+      if (!groupedQuestions[level]) {
+        groupedQuestions[level] = [];
+      }
+      groupedQuestions[level].push(question);
     });
     return Object.keys(groupedQuestions).map(level => groupedQuestions[level]);
   }
@@ -46,7 +48,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   useEffect(() => {
     const fetchWorksheetData = async () => {
       var setsRef = ref(database, `/sets/-O-36M-Za0LxFHabqj0h/`);
-      if (id != null){
+      if (id != null) {
         setsRef = ref(database, `/sets/${id}`);
       }
 
@@ -54,7 +56,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
       if (setsSnapshot.exists()) {
         const setsData = setsSnapshot.val();
         console.log("eq", setsData)
-        if (setsData.equations){
+        if (setsData.equations) {
           const filteredKeys = Object.keys(setsData.equations);
           const filteredEquations = filteredKeys.map((key, index) => ({
             id: new Date().getTime() + index,
@@ -73,34 +75,51 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   }, [database]);
 
   const handleNextQuiz = () => {
-    setCurrentQuizIndex((prevIndex) => prevIndex + 1);
+    setCurrentQuizIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      if (newIndex >= leveledQuizData[currentLevelIndex].length) {
+        setCurrentLevelIndex((prevLevelIndex) => prevLevelIndex + 1);
+        console.log(0);
+        return 0; // Reset quiz index for new level
+      }
+      console.log(newIndex);
+      return newIndex;
+    });
   };
 
   const increaseScore = (doInrease) => {
-    if (doInrease){
+    if (doInrease) {
       setScore((preScore => preScore + 1));
-      setIsCorrect(true);     
-    } else{
-      setIsCorrect(false); 
+      setIsCorrect(true);
+    } else {
+      setIsCorrect(false);
     }
     handleGlow(true);
   }
 
+  const isQuizCompleted = currentLevelIndex >= leveledQuizData.length;
+
   return (
     <div className="page quiz-page">
-      <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect}/>
-      <Nav mainTitle={mainTitle}/>
+      <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect} />
+      <Nav mainTitle={mainTitle} />
       <div className="quiz-content">
-        <ProgressBar currentVid={2} timePlayed={230} level={1} score={score} quizData={leveledQuizData} />
-        {quizData.length > 0 && currentQuizIndex < quizData.length && (
-          <QuizBox 
-            key={currentQuizIndex} 
-            expression={quizData[currentQuizIndex].latex} 
-            validAns={quizData[currentQuizIndex].ans}
-            nextQuiz={handleNextQuiz} 
-            motivs={motivs}
-            increaseScore={increaseScore}
-          />
+        {isQuizCompleted ? (
+          <QuizCompletion score={score} totalQuestions={quizData.length} />
+        ) : (
+          <>
+            <ProgressBar level={currentLevelIndex} score={currentQuizIndex} quizData={leveledQuizData} />
+            {leveledQuizData.length > 0 && currentLevelIndex < leveledQuizData.length && currentQuizIndex < leveledQuizData[currentLevelIndex].length && (
+              <QuizBox
+                key={`${currentLevelIndex}-${currentQuizIndex}`}
+                expression={leveledQuizData[currentLevelIndex][currentQuizIndex].latex}
+                validAns={leveledQuizData[currentLevelIndex][currentQuizIndex].ans}
+                nextQuiz={handleNextQuiz}
+                motivs={motivs}
+                increaseScore={increaseScore}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

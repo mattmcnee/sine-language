@@ -32,7 +32,7 @@ const ProgressBar = ({ score, level, quizData }) => {
           ))}
         </div>
       </div>
-      <span className="bar-span">Mastery {score}/{progressData[level]?.totalQuestions || 0}</span>
+      <span className="bar-span">{score}/{progressData[level]?.totalQuestions || 0} Complete</span>
     </div>
   );
 };

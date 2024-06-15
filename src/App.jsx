@@ -44,7 +44,7 @@ function App ({ newMainTitle }) {
     <>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home setMainTitle={setMainTitle}/>}/>
+          <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
           <Route exact path="/quiz/:id?" element={<Quiz database={database} setMainTitle={setMainTitle} mainTitle={title}/>}/>
           <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
           <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>

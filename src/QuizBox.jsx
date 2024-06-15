@@ -19,7 +19,7 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(ansState=="check"){
+    if (ansState === "check") {
       if (validAns.includes(userAnswer)) {
         setAnsState("correct");
         increaseScore(true);
@@ -28,7 +28,9 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
         increaseScore(false);
       }
     } else {
-      nextQuiz()
+      nextQuiz();
+      setUserAnswer('');
+      setAnsState("check");
     }
   };
 
@@ -46,23 +48,20 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           ref={inputRef}
         />
         <div className="bottom-box">
-
-          {ansState=="check" &&
-            <button type="submit">Check</button>
-          }
-          {ansState === "correct" &&
+          {ansState === "check" && <button type="submit">Check</button>}
+          {ansState === "correct" && (
             <>
-            <div className="correct-answer">{motivs[Math.floor(Math.random() * motivs.length)]}</div>
-            <button type="submit" onClick={() => nextQuiz()}>Continue</button>
+              <div className="correct-answer">{motivs[Math.floor(Math.random() * motivs.length)]}</div>
+              <button type="submit">Continue</button>
             </>
-          }
-          {ansState === "incorrect" &&
+          )}
+          {ansState === "incorrect" && (
             <>
-            <button className="">I was right</button>
-            <div className="correct-answer">{validAns[0]}</div>
-            <button type="submit" onClick={() => nextQuiz()}>Continue</button>
+              <button type="button" onClick={() => increaseScore(true)}>I was right</button>
+              <div className="correct-answer">{validAns[0]}</div>
+              <button type="submit">Continue</button>
             </>
-          }
+          )}
         </div>
       </form>
     </div>
@@ -70,4 +69,3 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
 };
 
 export default QuizBox;
-
