@@ -42,7 +42,7 @@ const Home = ({ setMainTitle, database }) => {
     <>
       <Nav />
       <div className="home-page">
-        <h1>Home Page</h1>
+        <h2>Home Page</h2>
         <div className="sets-container">
           {sets.map(([key, set]) => (
             <div
@@ -50,7 +50,7 @@ const Home = ({ setMainTitle, database }) => {
               key={key}
               onClick={() => quizRedirect(key)}
             >
-              <h2 className="title">{set.title}</h2>
+              <h3 className="title">{set.title}</h3>
               <button
                 className="edit-button"
                 onClick={(e) => {
