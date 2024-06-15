@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import sineImg from './sine.png';
-import profileImg from './default.webp';
+import sineImg from '/src/assets/sine.png';
+import profileImg from '/src/assets/default.webp';
 import './nav.scss';
 
 const Nav = ({ mainTitle }) => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ref, set, get, push, update } from 'firebase/database';
-import './create-set.scss';
-import Nav from './Nav';
-import SetForm from '/src/SetForm';
+import '/src/components/equations-form/create-set.scss';
+import Nav from '/src/components/nav/Nav';
+import SetForm from './SetForm';
 
 const EditSet = ({ database, openai }) => {
   const [equations, setEquations] = useState([]);

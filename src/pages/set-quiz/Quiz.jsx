@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import QuizBox from '/src/QuizBox';
+import QuizBox from './QuizBox';
 import { set, ref, get } from 'firebase/database';
 import { useParams } from 'react-router-dom';
-import Nav from '/src/Nav';
-import ProgressBar from '/src/ProgressBar';
-import GlowEffect from '/src/GlowEffect';
-import QuizCompletion from '/src/QuizCompletion';
+import Nav from '/src/components/nav/Nav';
+import ProgressBar from '/src/components/progress-bar/ProgressBar';
+import GlowEffect from '/src/components/glow-effect/GlowEffect';
+import QuizCompletion from './QuizCompletion';
 
 const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);

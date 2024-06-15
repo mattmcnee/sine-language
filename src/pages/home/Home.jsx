@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Nav from '/src/Nav';
+import Nav from '/src/components/nav/Nav';
 import { ref, get } from 'firebase/database';
 import './home.scss';
 

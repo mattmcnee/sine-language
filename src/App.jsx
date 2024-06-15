@@ -4,12 +4,10 @@ import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import OpenAI from 'openai';
-import Home from './pages/Home';
-import Quiz from './pages/Quiz';
-import Create from './Create';
-import CreateSet from './CreateSet';
-import EditEquations from './EditEquations';
-import EditSet from './EditSet';
+import Home from '/src/pages/home/Home';
+import Quiz from '/src/pages/set-quiz/Quiz';
+import EditEquations from '/src/pages/equations-edit/EditEquations';
+import EditSet from '/src/pages/set-edit/EditSet';
 import './app.scss';
 
 function App ({ newMainTitle }) {
@@ -46,8 +44,6 @@ function App ({ newMainTitle }) {
         <Routes>
           <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
           <Route exact path="/quiz/:id?" element={<Quiz database={database} setMainTitle={setMainTitle} mainTitle={title}/>}/>
-          <Route exact path="/create" element={<Create database={database} openai={openai}/>}/>
-          <Route path="/create-set/:id?" element={<CreateSet database={database} openai={openai}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>
