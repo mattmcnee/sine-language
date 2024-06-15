@@ -57,7 +57,7 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           )}
           {ansState === "incorrect" && (
             <>
-              <button type="button" onClick={() => increaseScore(true)}>I was right</button>
+              <button type="button">I was right</button>
               <div className="correct-answer">{validAns[0]}</div>
               <button type="submit">Continue</button>
             </>

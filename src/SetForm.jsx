@@ -133,7 +133,7 @@ const EquationForm = ({ equationsData, titleData, saveTimeData, saveChanges, gen
                   <BlockMath>{equation.latex}</BlockMath>
                 </div>
                 <input
-                  type="number"
+                  type="text"
                   value={equation.level}
                   onChange={(event) => handleLevelChange(equation.id, event)}
                   className="level-input"
