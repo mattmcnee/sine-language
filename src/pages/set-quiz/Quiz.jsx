@@ -124,11 +124,10 @@ const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
         return;
       }
       
-      const instructions = `You are an assistant that checks the validity of maths expressed in written langauge.`;
-      const questionPrompt = `Does "${userAns}" correctly express "${exp}" without using symbols?
-      Do not require the precise translation as long as the meaning is correctly expressed. For example, "${valAns[0]}" is valid.`;
-      const reminder = `Return only "true" if it is valid and only "false" if it is not or if symbols are used. 
-      Ignore upper or lowercase.`;
+      const instructions = `You are an assistant that checks the validity of new translations of maths to written langauge.`;
+      const questionPrompt = `The equation "${exp}" may be written as "${valAns}". 
+      Is the new translation "${userAns}" a valid way of expressing the equation "${exp}" without using symbols? Assess correct meaning instead of correct grammar.`;
+      const reminder = `Return only "true" if it is valid and only "false" if it is not. Return "false" if maths symbols are used instead of words. Ignore upper or lowercase.`;
       const prompt = [
         { role: "system", content: instructions },
         { role: 'user', content: `${questionPrompt}\n${reminder}` },

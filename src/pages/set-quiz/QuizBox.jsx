@@ -17,10 +17,18 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore, checkA
     setUserAnswer(e.target.value);
   };
 
+  const removePrefix = (str) => {
+      str = str.toLowerCase();
+      if (str.startsWith("the ")) {
+        str = str.slice(4);
+      }
+      return str;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (ansState === "check") {
-      if (validAns.includes(userAnswer)) {
+      if (validAns.includes(removePrefix(userAnswer))) {
         setAnsState("correct");
         increaseScore(true);
       } else {
@@ -46,7 +54,7 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore, checkA
           onChange={handleInputChange} 
           placeholder="Enter your answer" 
           ref={inputRef}
-          disabled={ansState !== "check"}
+          // disabled={ansState !== "check"}
         />
         <div className="bottom-box">
           {ansState === "check" && <button type="submit">Check</button>}
