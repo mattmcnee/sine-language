@@ -43,7 +43,7 @@ function App ({ newMainTitle }) {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
-          <Route exact path="/quiz/:id?" element={<Quiz database={database} setMainTitle={setMainTitle} mainTitle={title}/>}/>
+          <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} mainTitle={title}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>

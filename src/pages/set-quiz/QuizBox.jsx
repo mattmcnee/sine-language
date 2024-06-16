@@ -4,7 +4,7 @@ import 'katex/dist/katex.min.css';
 import './quizBox.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
+const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore, checkAns, checkedAns }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [ansState, setAnsState] = useState("check");
   const inputRef = useRef(null);
@@ -46,6 +46,7 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           onChange={handleInputChange} 
           placeholder="Enter your answer" 
           ref={inputRef}
+          disabled={ansState !== "check"}
         />
         <div className="bottom-box">
           {ansState === "check" && <button type="submit">Check</button>}
@@ -57,7 +58,9 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore }) => {
           )}
           {ansState === "incorrect" && (
             <>
-              <button type="button">I was right</button>
+              {!checkedAns && (
+                <button type="button" onClick={() => checkAns(expression, validAns, userAnswer)}>I was right</button>
+              )}
               <div className="correct-answer">{validAns[0]}</div>
               <button type="submit">Continue</button>
             </>

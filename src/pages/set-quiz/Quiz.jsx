@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import QuizBox from './QuizBox';
-import { set, ref, get } from 'firebase/database';
+import { set, ref, get, push } from 'firebase/database';
 import { useParams } from 'react-router-dom';
 import Nav from '/src/components/nav/Nav';
 import ProgressBar from '/src/components/progress-bar/ProgressBar';
 import GlowEffect from '/src/components/glow-effect/GlowEffect';
 import QuizCompletion from './QuizCompletion';
+import PopupBar from '/src/components/popup-bar/PopupBar';
 
-const Quiz = ({ database, setMainTitle, mainTitle }) => {
+const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
   const [quizData, setQuizData] = useState([]);
   const [leveledQuizData, setLeveledQuizData] = useState([]);
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
@@ -15,6 +16,8 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   const [score, setScore] = useState(0);
   const [length, setLength] = useState(0);
   const { id } = useParams();
+  const [popupInfo, setPopupInfo] = useState({text: "", show: false})
+  const [checkedAns, setCheckedAns] =  useState(false);
 
   // glow effect
   const [isGlowing, setIsGlowing] = useState(false);
@@ -60,7 +63,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
           const filteredKeys = Object.keys(setsData.equations);
           const filteredEquations = filteredKeys.map((key, index) => ({
             id: new Date().getTime() + index,
-            ans: setsData.equations[key].ans || [],
+            ans: Object.values(setsData.equations[key].ans) || [],
             latex: decodeURIComponent(key),
             level: setsData.equations[key].level || '1'
           }));
@@ -75,6 +78,7 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
   }, [database]);
 
   const handleNextQuiz = () => {
+    setCheckedAns(false)
     setCurrentQuizIndex((prevIndex) => {
       const newIndex = prevIndex + 1;
       if (newIndex >= leveledQuizData[currentLevelIndex].length) {
@@ -97,10 +101,85 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
     handleGlow(true);
   }
 
+  const showPopup = (message, duration) => {
+    setPopupInfo({ text: message, show: true });
+    setTimeout(() => setPopupInfo(prev => ({ ...prev, show: false })), duration);
+    setTimeout(() => setPopupInfo({ text: "", show: false }), duration + 500);
+  };
+
+  function stringToBoolean(str) {
+    const responseVal = str.trim().toLowerCase().replace(/\./g, '').replace(/\"/g, '');
+    return responseVal === 'true' || responseVal === 'yes';
+  }
+
+
+  const checkAns = async (exp, valAns, userAns) => {
+    // console.log(checkedAns)
+    if (!checkedAns){
+      // setCheckedAns(true)
+
+      if (userAns.trim() === "") {
+        showPopup("Our AI system believes your answer is incorrect. It has been added to our list of potential answers for manual review", 3000);
+        console.log("empty");
+        return;
+      }
+      
+      const instructions = `You are an assistant that checks the validity of maths expressed in written langauge.`;
+      const questionPrompt = `Does "${userAns}" correctly express "${exp}" without using symbols?
+      Do not require the precise translation as long as the meaning is correctly expressed. For example, "${valAns[0]}" is valid.`;
+      const reminder = `Return only "true" if it is valid and only "false" if it is not or if symbols are used. 
+      Ignore upper or lowercase.`;
+      const prompt = [
+        { role: "system", content: instructions },
+        { role: 'user', content: `${questionPrompt}\n${reminder}` },
+      ];
+
+      console.log(prompt);
+
+      try {
+        const chatCompletion = await openai.chat.completions.create({
+          messages: prompt,
+          model: 'gpt-3.5-turbo',
+        });
+
+        if (chatCompletion.choices && chatCompletion.choices.length > 0) {
+          const response = stringToBoolean(chatCompletion.choices[0].message.content);
+          if (response === "true") {
+            // uploadNewAns(exp, userAns);
+            showPopup("Our AI system believes your answer is correct. Nice work! We'll add it to our database now", 4000);
+          } else {
+            showPopup("Our AI system believes your answer is incorrect. It has been added to our list of potential answers for manual review", 3000);
+          }
+          console.log(chatCompletion.choices[0].message.content);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data from OpenAI:", error);
+      }
+    }
+  };
+
+  const uploadNewAns = (equation, newAns) => {
+    const newAnsRef = ref(database, `/equation-data/equations/${encodeURIComponent(equation)}/ans`);
+    push(newAnsRef, newAns).then(() => {
+      console.log('New answer added successfully');
+    }).catch(error => {
+      console.error(`Error adding new answer to Firebase:`, error);
+    });
+
+    const newSetAnsRef = ref(database, `/sets/${id}/equations/${encodeURIComponent(equation)}/ans`);
+    push(newSetAnsRef, newAns).then(() => {
+      console.log('New answer added successfully');
+    }).catch(error => {
+      console.error(`Error adding new answer to Firebase:`, error);
+    });
+  };
+  
+
   const isQuizCompleted = currentLevelIndex >= leveledQuizData.length;
 
   return (
     <div className="page quiz-page">
+      <PopupBar info={popupInfo}/>
       <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect} />
       <Nav mainTitle={mainTitle} />
       <div className="quiz-content">
@@ -117,6 +196,8 @@ const Quiz = ({ database, setMainTitle, mainTitle }) => {
                 nextQuiz={handleNextQuiz}
                 motivs={motivs}
                 increaseScore={increaseScore}
+                checkAns={checkAns}
+                checkedAns={checkedAns}
               />
             )}
           </>

@@ -1,0 +1,22 @@
+.popup{
+	position: absolute;
+	top: 100px;
+	left: 30px;
+	width: calc(100vw - 60px);
+	z-index: 40;
+	background-color: white;
+	height: 100px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	transition: opacity 0.4s ease;
+	opacity: 0;
+	pointer-events: none;
+	justify-content: center;
+	align-content: center;
+	text-align: center;
+}
+
+.popup.show{
+	opacity: 1;
+	pointer-events: none;
+}

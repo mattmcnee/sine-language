@@ -104,8 +104,8 @@ const EditSet = ({ database, openai }) => {
     if (id === "new" || id === null) { // for creating a new sheet
       const newSheetRef = push(ref(database, 'sets/'));
       set(newSheetRef, theSetData).then(() => {
-        id = newSheetRef.key;
-        navigate(`/create-set/${id}`);
+        const newId = newSheetRef.key;
+        navigate(`/create-set/${newId}`);
       }).catch(error => {
         console.error("Error writing new sheet data to Firebase:", error);
       });
