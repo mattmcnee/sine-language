@@ -63,16 +63,20 @@ function App ({ newMainTitle }) {
     localStorage.setItem('theme', newTheme);
   };
 
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+
   const backgroundColor = theme === 'dark' ? '#333' : '#fff';
   const textColor = theme === 'dark' ? '#fff' : '#000';
 
   return (
-    <div className={`page ${scroll ? '' : 'fixed'}`} style={{ backgroundColor, color: textColor }}>
+    <div className={`page ${scroll ? '' : 'fixed'}`}>
       <Router>
         <Nav mainTitle={title} toggleTheme={toggleTheme}/>
         <Routes>
           <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
-          <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} mainTitle={title}/>}/>
+          <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} setScroll={setScroll}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
           <Route path="*" element={<Home/>}/>

@@ -40,7 +40,6 @@ const Home = ({ setMainTitle, database }) => {
 
   return (
     <>
-      <Nav />
       <div className="home-page">
         <h2>Home Page</h2>
         <div className="sets-container">

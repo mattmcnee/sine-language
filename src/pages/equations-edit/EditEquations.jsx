@@ -22,7 +22,7 @@ const EditEquations = ({ database, openai }) => {
           console.log(firebaseKeys);
           const transformedEquations = firebaseKeys.map((key, index) => ({
             id: new Date().getTime() + index,
-            ans: firebaseData.equations[key].ans,
+            ans: firebaseData.equations[key].ans || [],
             latex: decodeURIComponent(key),
             expanded: false
           }));
@@ -66,12 +66,16 @@ const EditEquations = ({ database, openai }) => {
   const removePrefix = (arr) => {
     return arr.map(str => {
       str = str.toLowerCase();
+      if (str.startsWith("is ")) {
+        str = str.slice(3);
+      }
       if (str.startsWith("the ")) {
         str = str.slice(4);
       }
       return str;
     });
   }
+
 
   const generateDummy = async (input) => {
     const instructions = `Given a LaTeX expression, return an array of written English ways of expressing the LaTeX`;
@@ -103,7 +107,6 @@ const EditEquations = ({ database, openai }) => {
 
   return (
     <div>
-      <Nav />
       <EquationForm
         equationsData={equations}
         titleData={title}

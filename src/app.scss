@@ -1,3 +1,13 @@
+.dark {
+  --background-color: #333;
+  --text-color: #fff;
+}
+
+.light {
+  --background-color: #fafafa;
+  --text-color: #000;
+}
+
 html, body, #root {
   height: 100vh;
   margin: 0;
@@ -12,6 +22,14 @@ html, body, #root {
 
 .page.fixed{
   overflow-y: hidden;
+}
+
+.dark .page{
+  background-color: #333;
+}
+
+.light .page{
+  background-color: #fafafa;
 }
 
 /* WebKit Browsers (Chrome, Safari) */

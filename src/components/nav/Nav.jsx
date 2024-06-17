@@ -23,7 +23,7 @@ const Nav = ({ mainTitle, toggleTheme }) => {
         	{/*<span className="logo-name">Username</span>*/}
         	{/*<button className="nav-button"><i className="fas fa-plus"></i></button>*/}
           <img src={profileImg} alt="My Image" className="main-logo" />
-                <button onClick={toggleTheme} style={{ position: 'fixed', top: '10px', right: '10px' }}>
+                <button onClick={toggleTheme}>
         Toggle Theme
       </button>
         </div>

@@ -8,7 +8,7 @@ import GlowEffect from '/src/components/glow-effect/GlowEffect';
 import QuizCompletion from './QuizCompletion';
 import PopupBar from '/src/components/popup-bar/PopupBar';
 
-const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
+const Quiz = ({ database, openai, setMainTitle, setScroll }) => {
   const [quizData, setQuizData] = useState([]);
   const [leveledQuizData, setLeveledQuizData] = useState([]);
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
@@ -26,6 +26,12 @@ const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
     setIsGlowing(true);
     setTimeout(() => setIsGlowing(false), 1000);
   };
+
+  // disable scroll when the component mounts
+  useEffect(() => {    
+    setScroll(false);
+    return () => setScroll(true);
+  }, [setScroll]);
 
   const motivs = [
     "well done!",

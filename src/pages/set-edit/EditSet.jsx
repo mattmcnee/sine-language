@@ -160,8 +160,7 @@ const EditSet = ({ database, openai }) => {
 
 
   return (
-    <div className="page">
-      <Nav />
+    <div>
       <SetForm
         equationsData={equations}
         titleData={title}

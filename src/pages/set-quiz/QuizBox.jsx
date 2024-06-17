@@ -19,6 +19,9 @@ const QuizBox = ({ expression, validAns, nextQuiz, motivs, increaseScore, checkA
 
   const removePrefix = (str) => {
       str = str.toLowerCase();
+      if (str.startsWith("is ")) {
+        str = str.slice(3);
+      }
       if (str.startsWith("the ")) {
         str = str.slice(4);
       }
