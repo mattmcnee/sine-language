@@ -10,6 +10,8 @@ import EditEquations from '/src/pages/equations-edit/EditEquations';
 import EditSet from '/src/pages/set-edit/EditSet';
 import './app.scss';
 
+import ThemeDetector from './ThemeDetector';
+
 function App ({ newMainTitle }) {
   const [title, setTitle] = useState("Sine Language");
 
@@ -46,6 +48,7 @@ function App ({ newMainTitle }) {
           <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} mainTitle={title}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
+          <Route path="/theme" element={<ThemeDetector/>}/>
           <Route path="*" element={<Home/>}/>
         </Routes>
       </Router>

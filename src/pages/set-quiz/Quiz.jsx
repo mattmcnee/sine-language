@@ -114,9 +114,8 @@ const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
 
 
   const checkAns = async (exp, valAns, userAns) => {
-    // console.log(checkedAns)
     if (!checkedAns){
-      // setCheckedAns(true)
+      setCheckedAns(true)
 
       if (userAns.trim() === "") {
         showPopup("Our AI system believes your answer is incorrect. It has been added to our list of potential answers for manual review", 3000);
@@ -144,7 +143,7 @@ const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
         if (chatCompletion.choices && chatCompletion.choices.length > 0) {
           const response = stringToBoolean(chatCompletion.choices[0].message.content);
           if (response === "true") {
-            // uploadNewAns(exp, userAns);
+            uploadNewAns(exp, userAns);
             showPopup("Our AI system believes your answer is correct. Nice work! We'll add it to our database now", 4000);
           } else {
             showPopup("Our AI system believes your answer is incorrect. It has been added to our list of potential answers for manual review", 3000);
