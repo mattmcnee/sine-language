@@ -8,10 +8,12 @@ import Home from '/src/pages/home/Home';
 import Quiz from '/src/pages/set-quiz/Quiz';
 import EditEquations from '/src/pages/equations-edit/EditEquations';
 import EditSet from '/src/pages/set-edit/EditSet';
+import Nav from '/src/components/nav/Nav';
 import './app.scss';
 
 function App ({ newMainTitle }) {
   const [title, setTitle] = useState("Sine Language");
+  const [scroll, setScroll] = useState(true);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   });
@@ -65,11 +67,9 @@ function App ({ newMainTitle }) {
   const textColor = theme === 'dark' ? '#fff' : '#000';
 
   return (
-    <div style={{ backgroundColor, color: textColor, minHeight: '100vh' }}>
-      <button onClick={toggleTheme} style={{ position: 'fixed', top: '10px', right: '10px' }}>
-        Toggle Theme
-      </button>
+    <div className={`page ${scroll ? '' : 'fixed'}`} style={{ backgroundColor, color: textColor }}>
       <Router>
+        <Nav mainTitle={title} toggleTheme={toggleTheme}/>
         <Routes>
           <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
           <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} mainTitle={title}/>}/>

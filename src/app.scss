@@ -10,6 +10,10 @@ html, body, #root {
   font-family: sans-serif;
 }
 
+.page.fixed{
+  overflow-y: hidden;
+}
+
 /* WebKit Browsers (Chrome, Safari) */
 .page::-webkit-scrollbar {
   width: 8px; /* Adjust scrollbar width */

@@ -102,7 +102,7 @@ const EditEquations = ({ database, openai }) => {
 
 
   return (
-    <div className="page">
+    <div>
       <Nav />
       <EquationForm
         equationsData={equations}

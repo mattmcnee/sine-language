@@ -176,10 +176,9 @@ const Quiz = ({ database, openai, setMainTitle, mainTitle }) => {
   const isQuizCompleted = currentLevelIndex >= leveledQuizData.length;
 
   return (
-    <div className="page quiz-page">
+    <div>
       <PopupBar info={popupInfo}/>
       <GlowEffect isGlowing={isGlowing} isCorrect={isCorrect} />
-      <Nav mainTitle={mainTitle} />
       <div className="quiz-content">
         {isQuizCompleted ? (
           <QuizCompletion score={score} totalQuestions={quizData.length} />

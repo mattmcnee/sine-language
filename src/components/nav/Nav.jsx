@@ -4,7 +4,7 @@ import sineImg from '/src/assets/sine.png';
 import profileImg from '/src/assets/default.webp';
 import './nav.scss';
 
-const Nav = ({ mainTitle }) => {
+const Nav = ({ mainTitle, toggleTheme }) => {
     const navigate = useNavigate();
 
     const handleRedirect = () => {
@@ -23,6 +23,9 @@ const Nav = ({ mainTitle }) => {
         	{/*<span className="logo-name">Username</span>*/}
         	{/*<button className="nav-button"><i className="fas fa-plus"></i></button>*/}
           <img src={profileImg} alt="My Image" className="main-logo" />
+                <button onClick={toggleTheme} style={{ position: 'fixed', top: '10px', right: '10px' }}>
+        Toggle Theme
+      </button>
         </div>
       </div>
     );
