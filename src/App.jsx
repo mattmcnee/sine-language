@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
@@ -10,12 +10,13 @@ import EditEquations from '/src/pages/equations-edit/EditEquations';
 import EditSet from '/src/pages/set-edit/EditSet';
 import './app.scss';
 
-import ThemeDetector from './ThemeDetector';
-
 function App ({ newMainTitle }) {
   const [title, setTitle] = useState("Sine Language");
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  });
 
-  // Config
+  // Firebase Config
   const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -37,23 +38,48 @@ function App ({ newMainTitle }) {
 
   useEffect(() => {
     newMainTitle(title);
-    console.log(title)
+    console.log(title);
   }, [title]);
 
+  // light/dark mode change in browser preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = (e) => {
+      if (!localStorage.getItem('theme')){
+        const newTheme = e.matches ? 'dark' : 'light';
+        setTheme(newTheme);
+      }
+    };
+    mediaQuery.addEventListener('change', handleThemeChange);
+    return () => mediaQuery.removeEventListener('change', handleThemeChange);
+  }, []);
+
+  // light/dark mode change requested by user
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  const backgroundColor = theme === 'dark' ? '#333' : '#fff';
+  const textColor = theme === 'dark' ? '#fff' : '#000';
+
   return (
-    <>
+    <div style={{ backgroundColor, color: textColor, minHeight: '100vh' }}>
+      <button onClick={toggleTheme} style={{ position: 'fixed', top: '10px', right: '10px' }}>
+        Toggle Theme
+      </button>
       <Router>
         <Routes>
           <Route exact path="/" element={<Home setMainTitle={setMainTitle} database={database}/>}/>
           <Route exact path="/quiz/:id?" element={<Quiz database={database} openai={openai} setMainTitle={setMainTitle} mainTitle={title}/>}/>
           <Route path="/edit-equations" element={<EditEquations database={database} openai={openai}/>}/>
           <Route path="/edit-set/:id?" element={<EditSet database={database} openai={openai}/>}/>
-          <Route path="/theme" element={<ThemeDetector/>}/>
           <Route path="*" element={<Home/>}/>
         </Routes>
       </Router>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
